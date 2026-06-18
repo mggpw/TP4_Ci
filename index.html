@@ -5,106 +5,108 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TP N°4 · Funciones</title>
 <style>
-:root{
-  --bg:#0a1628;
-  --hero1:#0d2137; --hero2:#1a3a5c;
-  --card-bg:#0d2137; --card-border:#1e3a55;
-  --opt-bg:#0a1f35; --opt-hover:#0d2a45;
-  --correct-bg:#0a2e1a; --correct-input:#0d2e17; --correct-border:#4ade80;
-  --incorrect-bg:#2e0a0a; --incorrect-input:#2e1515; --incorrect-border:#f87171;
-  --plane-bg:#f8f9ff; --grid:#dde3f0;
-  --text:#e7edf5; --text-dim:#8fa3bf;
-  --radius:14px;
-}
-*{box-sizing:border-box;}
+/* =====================================================================
+   NUEVA ESTÉTICA APLICADA (Estilo "Coordenadas")
+   ===================================================================== */
+*{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;}
-body{margin:0;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.55;}
-.hero{background:linear-gradient(135deg,#0d2137,#1a3a5c,#0d2137);padding:44px 20px 30px;text-align:center;border-bottom:1px solid var(--card-border);}
-.hero .eyebrow{color:#f3fbff;font-size:12.5px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;}
-.hero h1{margin:0 0 8px;font-size:clamp(22px,4.5vw,34px);background:linear-gradient(90deg,#00d4aa,#3b82f6);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800;}
-.hero p{margin:4px 0;color:var(--text-dim);font-size:14.5px;max-width:560px;margin-left:auto;margin-right:auto;}
-.hero .badge{display:inline-block;margin-top:14px;padding:6px 14px;background:#0a1f35;border:1px solid var(--card-border);border-radius:999px;font-size:12px;color:#00d4aa;letter-spacing:.5px;}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0a1628;color:#fff;min-height:100vh;line-height:1.55;}
 
-.progress-wrap{position:sticky;top:0;z-index:50;background:#0d2137;padding:10px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--card-border);}
-.progress-track{flex:1;height:10px;background:#1e3a55;border-radius:999px;overflow:hidden;}
-.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,#00d4aa,#3b82f6);transition:width .4s ease;border-radius:999px;}
-.progress-label{font-size:12.5px;color:var(--text-dim);min-width:70px;text-align:right;}
+/* HERO SECTION */
+.hero{background:linear-gradient(135deg,#0d2137,#1a3a5c,#0d2137);padding:2.5rem 2rem 2rem;text-align:center;border-bottom:3px solid #00d4aa}
+.hero .eyebrow{display:inline-block;background:#00d4aa22;border:1px solid #00d4aa55;color:#f3fbff;padding:.3rem 1rem;border-radius:20px;font-size:.8rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:1rem}
+.hero h1{font-size:clamp(1.8rem,5vw,2.8rem);font-weight:800;line-height:1.1;margin-bottom:.7rem;color:#e7f7ff;}
+.hero p{color:#8bafc8;font-size:1rem;max-width:560px;margin:0 auto .3rem}
+.hero p:last-of-type{margin-bottom: 1.5rem;}
+.hero .badge{display:none;} /* Oculto para coincidir con la estética de referencia */
 
-.toc{position:sticky;top:46px;z-index:40;background:#0a1628;padding:9px 16px;display:flex;gap:7px;overflow-x:auto;border-bottom:1px solid var(--card-border);}
-.toc a{flex:0 0 auto;width:28px;height:28px;border-radius:50%;background:#0d2137;border:1px solid var(--card-border);color:var(--text-dim);display:flex;align-items:center;justify-content:center;font-size:11.5px;text-decoration:none;transition:.2s;}
+/* PROGRESS BAR */
+.progress-wrap{background:#0d2137;padding:.7rem 2rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;border-bottom:1px solid #1e3a55}
+.progress-track{flex:1;height:8px;background:#1e3a55;border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#00d4aa,#3b82f6);border-radius:4px;transition:width .5s;width:0%}
+.progress-label{background:#00d4aa22;border:1px solid #00d4aa55;color:#00d4aa;padding:.3rem .8rem;border-radius:8px;font-weight:700;font-size:.9rem;white-space:nowrap}
+
+/* TOC (Table of Contents) */
+.toc{position:sticky;top:53px;z-index:90;background:#0a1628;padding:12px 16px;display:flex;gap:8px;overflow-x:auto;border-bottom:1px solid #1e3a55;scrollbar-width:none;}
+.toc::-webkit-scrollbar{display:none;}
+.toc a{flex:0 0 auto;width:32px;height:32px;border-radius:50%;background:#0d2137;border:1px solid #1e3a55;color:#8bafc8;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;text-decoration:none;transition:.2s;}
 .toc a:hover{background:#0d2a45;color:#00d4aa;border-color:#00d4aa;}
-.toc a.done{background:#0a2e1a;border-color:#4ade80;color:#4ade80;}
+.toc a.done{background:#00d4aa22;border-color:#00d4aa;color:#00d4aa;}
 
-main{max-width:860px;margin:0 auto;padding:22px 14px 60px;}
-.card{background:#0d2137;border:1px solid #1e3a55;border-radius:var(--radius);padding:20px 20px 22px;margin-bottom:20px;}
+/* MAIN & CARDS */
+main{max-width:920px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+.card{background:#0d2137;border:1px solid #1e3a55;border-radius:16px;padding:1.4rem;margin-bottom:1.5rem;}
 .card:not(.final-card){content-visibility:auto;contain-intrinsic-size:1px 640px;}
-.card-head{display:flex;align-items:center;gap:12px;margin-bottom:4px;flex-wrap:wrap;}
-.card-num{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#00d4aa,#3b82f6);display:flex;align-items:center;justify-content:center;font-weight:800;color:#06141f;font-size:14px;flex:0 0 auto;}
-.card-title{font-size:17px;font-weight:700;margin:0;}
-.dyn-tag{display:inline-block;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#00d4aa;background:#0a2e2a;border:1px solid #14513f;padding:2px 8px;border-radius:999px;}
-.statement{color:var(--text-dim);font-size:14px;margin:10px 0 14px;padding:11px 13px;background:#0a1f35;border-left:3px solid #3b82f6;border-radius:8px;}
-.statement b{color:#cfe0f5;}
-.sub{margin:16px 0 6px;font-weight:600;color:#cfe0f5;font-size:14px;}
+.card-head{display:flex;align-items:center;gap:.7rem;margin-bottom:1.4rem;flex-wrap:wrap;}
+.card-num{width:36px;height:36px;background:linear-gradient(135deg,#00d4aa,#3b82f6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;color:#0a1628;flex-shrink:0;}
+.card-title{font-size:1.25rem;font-weight:700;color:#fff;margin:0;}
+.dyn-tag{display:inline-block;font-size:.7rem;font-weight:700;color:#f3fbff;text-transform:uppercase;letter-spacing:1px;margin-left:auto;}
+.statement{background:#0a1f35;border-left:4px solid #00d4aa;padding:1rem 1.2rem;border-radius:0 10px 10px 0;font-size:.95rem;line-height:1.6;color:#c8dff0;margin-bottom:1.2rem;}
+.statement b{color:#fff;}
+.sub{margin:16px 0 8px;font-weight:600;color:#c8dff0;font-size:.95rem;}
 
-.field-row{display:flex;align-items:center;gap:9px;margin:7px 0;flex-wrap:wrap;}
-.field-row label{font-size:13.5px;color:var(--text-dim);min-width:170px;}
-.ans-input{background:#0d2137;border:1px solid #2b4863;color:var(--text);padding:7px 9px;border-radius:8px;font-size:13.5px;width:100px;}
-.ans-input:focus{outline:none;border-color:#3b82f6;}
-.ans-input.correct{background:var(--correct-input);border-color:var(--correct-border);color:#bbf7d0;}
-.ans-input.incorrect{background:var(--incorrect-input);border-color:var(--incorrect-border);color:#fecaca;}
+/* INPUTS */
+.field-row{display:flex;align-items:center;gap:9px;margin:9px 0;flex-wrap:wrap;}
+.field-row label{font-size:.9rem;color:#8bafc8;min-width:170px;}
+.ans-input{background:#0d2137;border:1px solid #1e3a55;color:#fff;padding:.4rem .6rem;border-radius:6px;font-size:1rem;text-align:center;outline:none;width:80px;transition:border-color .2s;}
+.ans-input:focus{border-color:#00d4aa;}
+.ans-input.correct{border-color:#4ade80;background:#0d2e17;}
+.ans-input.incorrect{border-color:#f87171;background:#2e1515;}
 
-.choice-group{display:flex;gap:7px;flex-wrap:wrap;margin:7px 0;}
-.choice-btn,.match-btn{background:var(--opt-bg);border:1px solid #1e3a55;color:var(--text);padding:8px 13px;border-radius:9px;font-size:13px;cursor:pointer;transition:.15s;}
-.choice-btn:hover,.match-btn:hover{background:var(--opt-hover);}
-.choice-btn.selected,.match-btn.selected{border-color:#3b82f6;background:#0d2a45;}
-.choice-btn.correct,.match-btn.correct{background:var(--correct-bg);border-color:var(--correct-border);color:#bbf7d0;}
-.choice-btn.incorrect,.match-btn.incorrect{background:var(--incorrect-bg);border-color:var(--incorrect-border);color:#fecaca;}
-.match-btn.locked{opacity:.55;cursor:default;}
+/* BUTTONS & CHOICES */
+.choice-group{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0;}
+.choice-btn, .match-btn, .drag-card{background:#0a1f35;border:2px solid #1e3a55;border-radius:10px;padding:.7rem 1rem;cursor:pointer;font-size:.9rem;color:#c8dff0;text-align:center;transition:border-color .2s,background .2s;}
+.choice-btn:hover, .match-btn:hover, .drag-card:hover{border-color:#3b82f6;background:#0d2a45;}
+.choice-btn.selected, .match-btn.selected, .drag-card.selected{border-color:#f59e0b;background:#1e1a0a;color:#fff;}
+.choice-btn.correct, .match-btn.correct, .drag-card.placed-correct{border-color:#4ade80;background:#0a2e1a;color:#86efac;cursor:default;}
+.choice-btn.incorrect, .match-btn.incorrect, .drag-card.placed-wrong{border-color:#f87171;background:#2e0a0a;color:#fca5a5;animation:shk .4s;}
+.match-btn.locked{opacity:.7;cursor:default;}
+@keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 
-.verify-btn{margin-top:12px;background:linear-gradient(90deg,#00d4aa,#3b82f6);color:#06141f;border:none;padding:10px 18px;border-radius:9px;font-weight:700;font-size:13.5px;cursor:pointer;}
-.verify-btn:hover{filter:brightness(1.08);}
+.verify-btn{display:inline-flex;align-items:center;gap:.4rem;background:linear-gradient(135deg,#00d4aa,#3b82f6);color:#0a1628;border:none;border-radius:10px;padding:.65rem 1.3rem;font-size:.9rem;font-weight:700;cursor:pointer;transition:opacity .2s,transform .1s;text-transform:uppercase;letter-spacing:1px;margin-top:1rem;}
+.verify-btn:hover{opacity:.9;transform:translateY(-1px);}
 
-.feedback-msg{display:none;margin-top:12px;padding:10px 13px;border-radius:9px;font-size:13.5px;border:1px solid;}
-.feedback-msg.success{background:var(--correct-bg);border-color:#4ade8055;color:#bbf7d0;}
-.feedback-msg.error{background:var(--incorrect-bg);border-color:#f8717155;color:#fecaca;}
+/* FEEDBACK */
+.feedback-msg{display:none;background:#0a2e1a;border:1px solid #4ade8055;border-radius:10px;padding:.9rem 1.1rem;margin-top:.7rem;font-size:.9rem;color:#86efac;line-height:1.6;}
+.feedback-msg.success{background:#0a2e1a;border-color:#4ade8055;color:#86efac;}
+.feedback-msg.error{background:#2e0a0a;border-color:#f8717155;color:#fca5a5;}
 
-table.fill-table{width:100%;border-collapse:collapse;margin:10px 0;}
-table.fill-table th, table.fill-table td{border:1px solid #1e3a55;padding:7px 9px;text-align:center;font-size:13px;}
-table.fill-table th{background:#0a1f35;color:#9fc1e0;}
+/* TABLAS Y GRÁFICOS */
+table.fill-table{width:100%;border-collapse:collapse;margin:12px 0;border-radius:10px;overflow:hidden;background:#0d2137;}
+table.fill-table th, table.fill-table td{border:1px solid #1e3a55;padding:8px 10px;text-align:center;font-size:.9rem;}
+table.fill-table th{background:#0a1f35;color:#c8dff0;font-weight:600;}
 
-.mini-plane{width:100%;max-width:300px;display:block;margin:10px auto;border-radius:8px;}
-.graph-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:12px 0;}
-.graph-card{background:#0a1f35;border:1px solid #1e3a55;border-radius:10px;padding:10px;text-align:center;}
+.mini-plane{width:100%;max-width:320px;display:block;margin:12px auto;border-radius:12px;background:#f8f9ff;}
+.graph-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1rem 0;}
+.graph-card{background:#0a1f35;border:2px solid #1e3a55;border-radius:12px;padding:1rem;text-align:center;transition:border-color .2s;}
+.graph-card:hover{border-color:#00d4aa55;}
 .graph-card .choice-group{justify-content:center;}
-.graph-card p{font-size:12px;color:var(--text-dim);margin:4px 0 6px;}
+.graph-card p{font-size:.85rem;color:#c8dff0;margin:8px 0;font-weight:600;}
 
-.drop-zones{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
-.drop-zone{min-height:130px;background:#0a1f35;border:2px dashed #2b4863;border-radius:12px;padding:10px;}
-.drop-zone h4{margin:0 0 8px;font-size:12.5px;color:var(--text-dim);text-align:center;}
-.drag-card{background:#0d2137;border:1px solid #2b4863;padding:9px 11px;border-radius:9px;margin-bottom:7px;cursor:pointer;font-size:12.5px;transition:.15s;}
-.drag-card:hover{border-color:#3b82f6;}
-.drag-card.selected{border-color:#00d4aa;background:#0d2a3f;}
-.drag-card.placed-correct{background:var(--correct-bg);border-color:var(--correct-border);cursor:default;}
-.drag-card.placed-wrong{background:var(--incorrect-bg);border-color:var(--incorrect-border);}
-.hint-text{font-size:12px;color:#7dd3fc;margin-top:8px;}
+/* DRAG & DROP / RELACIONAR / ITEMS */
+.drop-zones{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem;}
+.drop-zone{min-height:140px;background:#0a1f35;border:2px dashed #1e3a55;border-radius:12px;padding:1rem;transition:border-color .2s;}
+.drop-zone h4{margin:0 0 10px;font-size:.9rem;color:#8bafc8;text-align:center;text-transform:uppercase;letter-spacing:1px;}
+.hint-text{font-size:.85rem;color:#8bafc8;margin-top:10px;text-align:center;}
 
-.match-wrap{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:12px;}
-.match-col .match-btn{display:block;width:100%;text-align:left;margin-bottom:7px;font-family:Consolas,monospace;font-size:12.5px;}
-.match-col h5{font-size:12px;color:var(--text-dim);margin:0 0 8px;text-transform:uppercase;letter-spacing:.5px;}
+.match-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1rem;}
+.match-col .match-btn{display:block;width:100%;text-align:left;margin-bottom:8px;font-family:Consolas,monospace;font-size:.9rem;}
+.match-col h5{font-size:.85rem;color:#8bafc8;margin:0 0 10px;text-transform:uppercase;letter-spacing:1px;}
 
-.item-block{border-top:1px dashed #1e3a55;padding-top:14px;margin-top:14px;}
+.item-block{border-top:1px dashed #1e3a55;padding-top:1.5rem;margin-top:1.5rem;}
 .item-block:first-child{border-top:none;margin-top:0;padding-top:0;}
-.func-label{font-family:Consolas,monospace;color:#7dd3fc;font-size:13.5px;background:#0a1f35;padding:4px 10px;border-radius:6px;display:inline-block;margin-bottom:10px;}
+.func-label{font-family:Consolas,monospace;color:#00d4aa;font-size:.95rem;background:#00d4aa22;border:1px solid #00d4aa55;padding:6px 12px;border-radius:8px;display:inline-block;margin-bottom:12px;font-weight:700;}
 
-.final-card{background:linear-gradient(135deg,#0a2e2a,#0a1f35);text-align:center;border:1px solid #14513f;}
-.final-card h2{font-size:24px;margin-bottom:4px;}
-.final-stat{font-size:42px;font-weight:800;background:linear-gradient(90deg,#00d4aa,#3b82f6);-webkit-background-clip:text;background-clip:text;color:transparent;}
-.final-card p{color:var(--text-dim);font-size:13.5px;}
+/* FINAL CARD */
+.final-card{background:linear-gradient(135deg,#0a2e2a,#0a1f35);text-align:center;border:2px solid #00d4aa;padding:2.5rem 1.5rem;}
+.final-card h2{font-size:1.5rem;margin-bottom:.5rem;color:#fff;}
+.final-stat{font-size:3.5rem;font-weight:900;color:#00d4aa;line-height:1.2;margin:1rem 0;}
+.final-card p{color:#c8dff0;font-size:1rem;}
 
-footer{text-align:center;color:#4b6178;font-size:11.5px;padding:20px;}
+footer{text-align:center;color:#8bafc8;font-size:.85rem;padding:2rem;border-top:1px solid #1e3a55;max-width:920px;margin:0 auto;}
 
-@media(max-width:560px){
-  .field-row label{min-width:100%;}
+@media(max-width:600px){
+  .field-row label{min-width:100%;margin-bottom:4px;}
   .match-wrap{grid-template-columns:1fr;}
   .drop-zones{grid-template-columns:1fr;}
 }
@@ -113,23 +115,22 @@ footer{text-align:center;color:#4b6178;font-size:11.5px;padding:20px;}
 <body>
 
 <header class="hero">
-  <div class="eyebrow">Seminario Nivelatorio de Matemática · INSPT‑UTN</div>
-  <h1> Funciones</h1>
-  <p>Unidad 4 — Variables, dominio, funciones lineales, cuadráticas y polinómicas de grado 3.</p> <p>¡Practicá los ejercicios del Trabajo Práctico N°4 con corrección al instante!.</p>
-  <span class="badge">17 ejercicios </span>
+  <div class="eyebrow">📐 Seminario Nivelatorio de Matemática · INSPT‑UTN</div>
+  <h1>Funciones</h1>
+  <p>Unidad 4 — Variables, dominio, funciones lineales, cuadráticas y polinómicas de grado 3.</p> 
+  <p>¡Practicá los ejercicios del Trabajo Práctico N°4 con corrección al instante!</p>
 </header>
 
-  
-
 <div class="progress-wrap">
+  <span style="font-size:.8rem;color:#8bafc8;white-space:nowrap;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Progreso</span>
   <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
   <span class="progress-label" id="progressLabel">0 / 17</span>
 </div>
+
 <nav class="toc" id="toc"></nav>
 
 <main id="mainEl">
 
-<!-- EJERCICIO 1 -->
 <section class="card" id="ej1" data-idx="1">
   <div class="card-head"><div class="card-num">1</div><h3 class="card-title">¿Es función?</h3><span class="dyn-tag">Arrastrar y clasificar</span></div>
   <div class="statement">Dadas las siguientes relaciones, indicá cuáles corresponden a <b>funciones</b>. Hacé clic en cada tarjeta y luego en la caja correcta.</div>
@@ -141,7 +142,6 @@ footer{text-align:center;color:#4b6178;font-size:11.5px;padding:20px;}
   <p class="hint-text" id="ej1-hint"></p>
 </section>
 
-<!-- EJERCICIO 2 -->
 <section class="card" id="ej2" data-idx="2">
   <div class="card-head"><div class="card-num">2</div><h3 class="card-title">Funciones a partir de gráficas</h3><span class="dyn-tag">Opción múltiple</span></div>
   <div class="statement">Dadas las siguientes gráficas, indicá cuáles corresponden a funciones <b>f : ℝ → ℝ</b>. Recordá el criterio de la recta vertical: si una recta vertical corta a la curva en más de un punto, no es función.</div>
@@ -169,7 +169,6 @@ footer{text-align:center;color:#4b6178;font-size:11.5px;padding:20px;}
   </div>
 </section>
 
-<!-- EJERCICIO 3 -->
 <section class="card" id="ej3" data-idx="3">
   <div class="card-head"><div class="card-num">3</div><h3 class="card-title">Expresar y tabular funciones</h3><span class="dyn-tag">Completar</span></div>
   <div class="statement">Escribí una expresión que represente cada función (aclarando el dominio). Luego completá la tabla de valores.</div>
@@ -189,17 +188,16 @@ footer{text-align:center;color:#4b6178;font-size:11.5px;padding:20px;}
     <div class="field-row"><label>Dominio:</label><div class="choice-group" id="e3b-dom"></div></div>
     <table class="fill-table"><tr><th>x</th><th>-1/2</th><th>0</th><th>1</th></tr>
       <tr><td>y</td>
-        <td><div class="choice-group" id="e3b-y1" style="justify-content:center"></div></td>
+        <td><div class="choice-group" id="e3b-y1" style="justify-content:center;margin:0;"></div></td>
         <td><input class="ans-input" id="e3b-y2" style="width:70px"></td>
         <td><input class="ans-input" id="e3b-y3" style="width:70px"></td>
       </tr>
     </table>
   </div>
-  <button class="verify-btn" data-check="3">Verificar respuestas</button>
+  <button class="verify-btn" data-check="3">✔ Verificar respuestas</button>
   <div class="feedback-msg" id="e3-msg"></div>
 </section>
 
-<!-- EJERCICIO 4 -->
 <section class="card" id="ej4" data-idx="4">
   <div class="card-head"><div class="card-num">4</div><h3 class="card-title">f(x) = 2x² − x + 1</h3><span class="dyn-tag">Completar</span></div>
   <div class="statement">Sea f : ℝ → ℝ / f(x) = 2x² − x + 1.</div>
@@ -207,11 +205,10 @@ footer{text-align:center;color:#4b6178;font-size:11.5px;padding:20px;}
   <div class="field-row"><label>b) Valores de x cuya imagen es 1:</label><input class="ans-input" id="e4b-x1" placeholder="x₁"><input class="ans-input" id="e4b-x2" placeholder="x₂"></div>
   <div class="field-row"><label>c) Imagen del opuesto de 1 — f(−1):</label><input class="ans-input" id="e4c"></div>
   <div class="field-row"><label>d) ¿Existe x tal que f(x) = −1?</label><div class="choice-group" id="e4d"></div></div>
-  <button class="verify-btn" data-check="4">Verificar respuestas</button>
+  <button class="verify-btn" data-check="4">✔ Verificar respuestas</button>
   <div class="feedback-msg" id="e4-msg"></div>
 </section>
 
-<!-- EJERCICIO 5 -->
 <section class="card" id="ej5" data-idx="5">
   <div class="card-head"><div class="card-num">5</div><h3 class="card-title">Lectura de un gráfico</h3><span class="dyn-tag">Mixta</span></div>
   <div class="statement">A continuación se presenta la gráfica de una función f : Df → ℝ. Observala con atención y respondé.</div>
@@ -225,11 +222,10 @@ footer{text-align:center;color:#4b6178;font-size:11.5px;padding:20px;}
   <div class="field-row"><label>f) Conjunto imagen de f:</label><div class="choice-group" id="e5f"></div></div>
   <div class="field-row"><label>g) Valor de f(−1/2):</label><input class="ans-input" id="e5g"></div>
   <div class="field-row"><label>h) ¿Pasa por el punto (1; −4)?</label><div class="choice-group" id="e5h"></div></div>
-  <button class="verify-btn" data-check="5">Verificar respuestas</button>
+  <button class="verify-btn" data-check="5">✔ Verificar respuestas</button>
   <div class="feedback-msg" id="e5-msg"></div>
 </section>
 
-<!-- EJERCICIO 6 -->
 <section class="card" id="ej6" data-idx="6">
   <div class="card-head"><div class="card-num">6</div><h3 class="card-title">f(x) = 1/x</h3><span class="dyn-tag">Completar</span></div>
   <div class="statement">Sea f : Df → ℝ / f(x) = 1/x.</div>
@@ -239,11 +235,10 @@ footer{text-align:center;color:#4b6178;font-size:11.5px;padding:20px;}
   <table class="fill-table"><tr><th>x</th><th>-3/4</th><th>-1</th><th>2</th></tr>
     <tr><td>y</td><td><input class="ans-input" id="e6d-y1" style="width:70px"></td><td><input class="ans-input" id="e6d-y2" style="width:70px"></td><td><input class="ans-input" id="e6d-y3" style="width:70px"></td></tr>
   </table>
-  <button class="verify-btn" data-check="6">Verificar respuestas</button>
+  <button class="verify-btn" data-check="6">✔ Verificar respuestas</button>
   <div class="feedback-msg" id="e6-msg"></div>
 </section>
 
-<!-- EJERCICIO 7 -->
 <section class="card" id="ej7" data-idx="7">
   <div class="card-head"><div class="card-num">7</div><h3 class="card-title">Uvas a $4500 el kilo</h3><span class="dyn-tag">Completar</span></div>
   <div class="statement">En una verdulería, el kilo de uvas se vende a $4500.</div>
@@ -251,23 +246,21 @@ footer{text-align:center;color:#4b6178;font-size:11.5px;padding:20px;}
   <div class="field-row"><label>b) ¿La relación entre c y p es función?</label><div class="choice-group" id="e7b-fn"></div></div>
   <div class="field-row"><label>&nbsp;&nbsp;Dominio:</label><div class="choice-group" id="e7b-dom"></div></div>
   <div class="field-row"><label>c) Kilos comprados si pagó $7425:</label><input class="ans-input" id="e7c"> kg</div>
-  <button class="verify-btn" data-check="7">Verificar respuestas</button>
+  <button class="verify-btn" data-check="7">✔ Verificar respuestas</button>
   <div class="feedback-msg" id="e7-msg"></div>
 </section>
 
-<!-- EJERCICIO 8 -->
 <section class="card" id="ej8" data-idx="8">
   <div class="card-head"><div class="card-num">8</div><h3 class="card-title">Trote a velocidad constante</h3><span class="dyn-tag">Completar + gráfico</span></div>
   <div class="statement">Una persona trota a velocidad constante de 8,2 km/h. t = tiempo (horas), d = distancia recorrida (km).</div>
   <div class="field-row"><label>a) Expresión de d en función de t:</label><div class="choice-group" id="e8a"></div></div>
   <div class="field-row"><label>b) Distancia recorrida en 20 min (1/3 h):</label><input class="ans-input" id="e8b"> km</div>
-  <button class="verify-btn" data-check="8">Verificar respuestas</button>
+  <button class="verify-btn" data-check="8">✔ Verificar respuestas</button>
   <div class="feedback-msg" id="e8-msg"></div>
   <p class="sub">c) Gráfico de la función:</p>
   <div id="e8-graph"></div>
 </section>
 
-<!-- EJERCICIO 9 -->
 <section class="card" id="ej9" data-idx="9">
   <div class="card-head"><div class="card-num">9</div><h3 class="card-title">Movimiento de una partícula</h3><span class="dyn-tag">Lectura de gráfico</span></div>
   <div class="statement">t = tiempo (segundos), d = distancia recorrida (metros). Observá el gráfico d(t):</div>
@@ -276,38 +269,34 @@ footer{text-align:center;color:#4b6178;font-size:11.5px;padding:20px;}
   <div class="field-row"><label>b) Distancia luego de 2 s:</label><input class="ans-input" id="e9b"> m</div>
   <div class="field-row"><label>c) ¿Cuánto tardó en recorrer 12 m?</label><input class="ans-input" id="e9c"> s</div>
   <div class="field-row"><label>d) Distancia total recorrida:</label><input class="ans-input" id="e9d"> m</div>
-  <button class="verify-btn" data-check="9">Verificar respuestas</button>
+  <button class="verify-btn" data-check="9">✔ Verificar respuestas</button>
   <div class="feedback-msg" id="e9-msg"></div>
 </section>
 
-<!-- EJERCICIO 10 -->
 <section class="card" id="ej10" data-idx="10">
   <div class="card-head"><div class="card-num">10</div><h3 class="card-title">Funciones lineales</h3><span class="dyn-tag">Completar + gráfico</span></div>
   <div class="statement">Para cada función lineal, indicá sus intersecciones con los ejes, pendiente, ordenada al origen, si es creciente/decreciente/constante y calculá f(−3).</div>
   <div id="ej10-body"></div>
-  <button class="verify-btn" data-check="10">Verificar respuestas</button>
+  <button class="verify-btn" data-check="10">✔ Verificar respuestas</button>
   <div class="feedback-msg" id="e10-msg"></div>
 </section>
 
-<!-- EJERCICIO 11 -->
 <section class="card" id="ej11" data-idx="11">
   <div class="card-head"><div class="card-num">11</div><h3 class="card-title">Ecuación de la recta</h3><span class="dyn-tag">Completar</span></div>
   <div class="statement">Encontrá la ecuación y = m·x + b de la recta que cumple cada condición.</div>
   <div id="ej11-body"></div>
-  <button class="verify-btn" data-check="11">Verificar respuestas</button>
+  <button class="verify-btn" data-check="11">✔ Verificar respuestas</button>
   <div class="feedback-msg" id="e11-msg"></div>
 </section>
 
-<!-- EJERCICIO 12 -->
 <section class="card" id="ej12" data-idx="12">
-  <div class="card-head"><div class="card-num">12</div><h3 class="card-title">Funciones cuadráticas</h3><span class="dyn-tag">Completa + opción múltiple</span></div>
+  <div class="card-head"><div class="card-num">12</div><h3 class="card-title">Funciones cuadráticas</h3><span class="dyn-tag">Completa + opc. múltiple</span></div>
   <div class="statement">Para cada función cuadrática: encontrá sus intersecciones con los ejes, el vértice, el conjunto imagen, y elegí las formas (canónica / factorizada / general) que faltan.</div>
   <div id="ej12-body"></div>
-  <button class="verify-btn" data-check="12">Verificar respuestas</button>
+  <button class="verify-btn" data-check="12">✔ Verificar respuestas</button>
   <div class="feedback-msg" id="e12-msg"></div>
 </section>
 
-<!-- EJERCICIO 13 -->
 <section class="card" id="ej13" data-idx="13">
   <div class="card-head"><div class="card-num">13</div><h3 class="card-title">Área de un rectángulo</h3><span class="dyn-tag">Mixta</span></div>
   <div class="statement">Si b es la base de un rectángulo (cm) cuyo perímetro es 40 cm, su área (cm²) es A(b) = −b(b − 20).</div>
@@ -316,32 +305,29 @@ footer{text-align:center;color:#4b6178;font-size:11.5px;padding:20px;}
   <div class="field-row"><label>b) Área si la base mide 4 cm:</label><input class="ans-input" id="e13-area"> cm²</div>
   <div class="field-row"><label>&nbsp;&nbsp;Altura en ese caso:</label><input class="ans-input" id="e13-alt"> cm</div>
   <div class="field-row"><label>c) Base para área máxima:</label><input class="ans-input" id="e13-max"> cm</div>
-  <button class="verify-btn" data-check="13">Verificar respuestas</button>
+  <button class="verify-btn" data-check="13">✔ Verificar respuestas</button>
   <div class="feedback-msg" id="e13-msg"></div>
   <div id="e13-graph"></div>
 </section>
 
-<!-- EJERCICIO 14 -->
 <section class="card" id="ej14" data-idx="14">
   <div class="card-head"><div class="card-num">14</div><h3 class="card-title">Pelota en caída libre</h3><span class="dyn-tag">Completar</span></div>
   <div class="statement">Desde un balcón a 9 m de altura se deja caer una pelota: h(t) = 9 − 4,9t² (t ≥ 0, en segundos).</div>
   <div class="field-row"><label>a) Altura al segundo de caer:</label><input class="ans-input" id="e14a"> m</div>
   <div class="field-row"><label>b) Tiempo en llegar al suelo:</label><input class="ans-input" id="e14b"> s</div>
-  <button class="verify-btn" data-check="14">Verificar respuestas</button>
+  <button class="verify-btn" data-check="14">✔ Verificar respuestas</button>
   <div class="feedback-msg" id="e14-msg"></div>
   <div id="e14-graph"></div>
 </section>
 
-<!-- EJERCICIO 15 -->
 <section class="card" id="ej15" data-idx="15">
   <div class="card-head"><div class="card-num">15</div><h3 class="card-title">Funciones cúbicas: coeficientes</h3><span class="dyn-tag">Completar tabla</span></div>
   <div class="statement">Identificá el coeficiente principal y el término independiente de cada función cúbica.</div>
   <div id="ej15-body"></div>
-  <button class="verify-btn" data-check="15">Verificar respuestas</button>
+  <button class="verify-btn" data-check="15">✔ Verificar respuestas</button>
   <div class="feedback-msg" id="e15-msg"></div>
 </section>
 
-<!-- EJERCICIO 16 -->
 <section class="card" id="ej16" data-idx="16">
   <div class="card-head"><div class="card-num">16</div><h3 class="card-title">Forma factorizada ↔ forma general</h3><span class="dyn-tag">Relacionar columnas</span></div>
   <div class="statement">Hacé clic en una expresión de la columna izquierda y luego en su forma desarrollada correspondiente de la derecha.</div>
@@ -352,16 +338,14 @@ footer{text-align:center;color:#4b6178;font-size:11.5px;padding:20px;}
   <div class="feedback-msg" id="e16-msg"></div>
 </section>
 
-<!-- EJERCICIO 17 -->
 <section class="card" id="ej17" data-idx="17">
   <div class="card-head"><div class="card-num">17</div><h3 class="card-title">Raíces de funciones cúbicas</h3><span class="dyn-tag">Completar tabla</span></div>
   <div class="statement">Hallá las raíces de cada función cúbica (en cualquier orden). Si hay raíz doble, escribila dos veces. Podés usar decimales aproximados para raíces irracionales.</div>
   <div id="ej17-body"></div>
-  <button class="verify-btn" data-check="17">Verificar respuestas</button>
+  <button class="verify-btn" data-check="17">✔ Verificar respuestas</button>
   <div class="feedback-msg" id="e17-msg"></div>
 </section>
 
-<!-- FINAL -->
 <section class="card final-card" id="final">
   <h2>🎓 Tu avance en el TP4</h2>
   <div class="final-stat" id="finalStat">0%</div>
@@ -748,35 +732,35 @@ function checkEj11(){
 /* ---- 12 ---- */
 const ej12Data = [
   {label:'a) f(x) = −2x² + 3x − 1', a:-2,h:0.75,k:0.125, roots:[0.5,1], intY:-1, dir:'max', xr:[-1,2.5],yr:[-3,1],
-   miss:[
-     {name:'Forma canónica', opts:[{t:'f(x) = 2(x − 3/4)² + 1/8',c:false},{t:'f(x) = −2(x − 3/4)² + 1/8',c:true},{t:'f(x) = −2(x + 3/4)² + 1/8',c:false}]},
-     {name:'Forma factorizada', opts:[{t:'f(x) = −2(x + 1/2)(x + 1)',c:false},{t:'f(x) = 2(x − 1/2)(x − 1)',c:false},{t:'f(x) = −2(x − 1/2)(x − 1)',c:true}]}
-   ]},
+    miss:[
+      {name:'Forma canónica', opts:[{t:'f(x) = 2(x − 3/4)² + 1/8',c:false},{t:'f(x) = −2(x − 3/4)² + 1/8',c:true},{t:'f(x) = −2(x + 3/4)² + 1/8',c:false}]},
+      {name:'Forma factorizada', opts:[{t:'f(x) = −2(x + 1/2)(x + 1)',c:false},{t:'f(x) = 2(x − 1/2)(x − 1)',c:false},{t:'f(x) = −2(x − 1/2)(x − 1)',c:true}]}
+    ]},
   {label:'b) f(x) = 3(x − 2)(x + 4)', a:3,h:-1,k:-27, roots:[-4,2], intY:-24, dir:'min', xr:[-6,4],yr:[-30,10],
-   miss:[
-     {name:'Forma general', opts:[{t:'f(x) = 3x² + 6x − 24',c:true},{t:'f(x) = 3x² − 6x − 24',c:false},{t:'f(x) = 3x² + 6x + 24',c:false}]},
-     {name:'Forma canónica', opts:[{t:'f(x) = 3(x − 1)² − 27',c:false},{t:'f(x) = 3(x + 1)² − 27',c:true},{t:'f(x) = 3(x + 1)² + 27',c:false}]}
-   ]},
+    miss:[
+      {name:'Forma general', opts:[{t:'f(x) = 3x² + 6x − 24',c:true},{t:'f(x) = 3x² − 6x − 24',c:false},{t:'f(x) = 3x² + 6x + 24',c:false}]},
+      {name:'Forma canónica', opts:[{t:'f(x) = 3(x − 1)² − 27',c:false},{t:'f(x) = 3(x + 1)² − 27',c:true},{t:'f(x) = 3(x + 1)² + 27',c:false}]}
+    ]},
   {label:'c) f(x) = 2(x − 1)² − 8', a:2,h:1,k:-8, roots:[-1,3], intY:-6, dir:'min', xr:[-3,5],yr:[-10,10],
-   miss:[
-     {name:'Forma general', opts:[{t:'f(x) = 2x² − 4x − 6',c:true},{t:'f(x) = 2x² + 4x − 6',c:false},{t:'f(x) = 2x² − 4x + 6',c:false}]},
-     {name:'Forma factorizada', opts:[{t:'f(x) = 2(x − 1)(x + 3)',c:false},{t:'f(x) = 2(x + 1)(x − 3)',c:true},{t:'f(x) = 2(x + 1)(x + 3)',c:false}]}
-   ]},
+    miss:[
+      {name:'Forma general', opts:[{t:'f(x) = 2x² − 4x − 6',c:true},{t:'f(x) = 2x² + 4x − 6',c:false},{t:'f(x) = 2x² − 4x + 6',c:false}]},
+      {name:'Forma factorizada', opts:[{t:'f(x) = 2(x − 1)(x + 3)',c:false},{t:'f(x) = 2(x + 1)(x − 3)',c:true},{t:'f(x) = 2(x + 1)(x + 3)',c:false}]}
+    ]},
   {label:'d) f(x) = −(1/3)(x + 2)² + 3', a:-1/3,h:-2,k:3, roots:[-5,1], intY:5/3, dir:'max', xr:[-7,3],yr:[-3,5],
-   miss:[
-     {name:'Forma general', opts:[{t:'f(x) = −(1/3)x² − (4/3)x + 5/3',c:true},{t:'f(x) = −(1/3)x² + (4/3)x + 5/3',c:false},{t:'f(x) = (1/3)x² − (4/3)x + 5/3',c:false}]},
-     {name:'Forma factorizada', opts:[{t:'f(x) = −(1/3)(x + 1)(x + 5)',c:false},{t:'f(x) = −(1/3)(x − 1)(x − 5)',c:false},{t:'f(x) = −(1/3)(x − 1)(x + 5)',c:true}]}
-   ]},
+    miss:[
+      {name:'Forma general', opts:[{t:'f(x) = −(1/3)x² − (4/3)x + 5/3',c:true},{t:'f(x) = −(1/3)x² + (4/3)x + 5/3',c:false},{t:'f(x) = (1/3)x² − (4/3)x + 5/3',c:false}]},
+      {name:'Forma factorizada', opts:[{t:'f(x) = −(1/3)(x + 1)(x + 5)',c:false},{t:'f(x) = −(1/3)(x − 1)(x − 5)',c:false},{t:'f(x) = −(1/3)(x − 1)(x + 5)',c:true}]}
+    ]},
   {label:'e) f(x) = −4x + 3x² − 4', a:3,h:2/3,k:-16/3, roots:[-2/3,2], intY:-4, dir:'min', xr:[-2,4],yr:[-7,5],
-   miss:[
-     {name:'Forma canónica', opts:[{t:'f(x) = 3(x − 2/3)² − 16/3',c:true},{t:'f(x) = 3(x + 2/3)² − 16/3',c:false},{t:'f(x) = 3(x − 2/3)² + 16/3',c:false}]},
-     {name:'Forma factorizada', opts:[{t:'f(x) = 3(x − 2/3)(x + 2)',c:false},{t:'f(x) = 3(x + 2/3)(x − 2)',c:true},{t:'f(x) = 3(x − 2/3)(x − 2)',c:false}]}
-   ]},
+    miss:[
+      {name:'Forma canónica', opts:[{t:'f(x) = 3(x − 2/3)² − 16/3',c:true},{t:'f(x) = 3(x + 2/3)² − 16/3',c:false},{t:'f(x) = 3(x − 2/3)² + 16/3',c:false}]},
+      {name:'Forma factorizada', opts:[{t:'f(x) = 3(x − 2/3)(x + 2)',c:false},{t:'f(x) = 3(x + 2/3)(x − 2)',c:true},{t:'f(x) = 3(x − 2/3)(x − 2)',c:false}]}
+    ]},
   {label:'f) f(x) = −2(x + 1)(x − 3)', a:-2,h:1,k:8, roots:[-1,3], intY:6, dir:'max', xr:[-3,5],yr:[-5,10],
-   miss:[
-     {name:'Forma general', opts:[{t:'f(x) = −2x² + 4x + 6',c:true},{t:'f(x) = −2x² − 4x + 6',c:false},{t:'f(x) = 2x² + 4x + 6',c:false}]},
-     {name:'Forma canónica', opts:[{t:'f(x) = −2(x + 1)² + 8',c:false},{t:'f(x) = −2(x − 1)² − 8',c:false},{t:'f(x) = −2(x − 1)² + 8',c:true}]}
-   ]}
+    miss:[
+      {name:'Forma general', opts:[{t:'f(x) = −2x² + 4x + 6',c:true},{t:'f(x) = −2x² − 4x + 6',c:false},{t:'f(x) = 2x² + 4x + 6',c:false}]},
+      {name:'Forma canónica', opts:[{t:'f(x) = −2(x + 1)² + 8',c:false},{t:'f(x) = −2(x − 1)² − 8',c:false},{t:'f(x) = −2(x − 1)² + 8',c:true}]}
+    ]}
 ];
 function buildEj12(){
   const html = ej12Data.map((it,i)=>{
@@ -849,7 +833,7 @@ const ej15Data = [
 ];
 function buildEj15(){
   const rows = ej15Data.map((it,i)=>
-    '<tr><td style="font-family:Consolas,monospace;text-align:left">'+it.f+'</td>'+
+    '<tr><td style="font-family:Consolas,monospace;text-align:left;color:#c8dff0;">'+it.f+'</td>'+
     '<td><input class="ans-input" id="e15-'+i+'-a" style="width:80px"></td>'+
     '<td><input class="ans-input" id="e15-'+i+'-d" style="width:80px"></td></tr>'
   ).join('');
