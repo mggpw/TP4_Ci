@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TP N°4 · Funciones</title>
+<style>
+:root{
+  --bg:#0a1628;
+  --hero1:#0d2137; --hero2:#1a3a5c;
+  --card-bg:#0d2137; --card-border:#1e3a55;
+  --opt-bg:#0a1f35; --opt-hover:#0d2a45;
+  --correct-bg:#0a2e1a; --correct-input:#0d2e17; --correct-border:#4ade80;
+  --incorrect-bg:#2e0a0a; --incorrect-input:#2e1515; --incorrect-border:#f87171;
+  --plane-bg:#f8f9ff; --grid:#dde3f0;
+  --text:#e7edf5; --text-dim:#8fa3bf;
+  --radius:14px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.55;}
+.hero{background:linear-gradient(135deg,#0d2137,#1a3a5c,#0d2137);padding:44px 20px 30px;text-align:center;border-bottom:1px solid var(--card-border);}
+.hero .eyebrow{color:#7dd3fc;font-size:12.5px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;}
+.hero h1{margin:0 0 8px;font-size:clamp(22px,4.5vw,34px);background:linear-gradient(90deg,#00d4aa,#3b82f6);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800;}
+.hero p{margin:4px 0;color:var(--text-dim);font-size:14.5px;max-width:560px;margin-left:auto;margin-right:auto;}
+.hero .badge{display:inline-block;margin-top:14px;padding:6px 14px;background:#0a1f35;border:1px solid var(--card-border);border-radius:999px;font-size:12px;color:#00d4aa;letter-spacing:.5px;}
+
+.progress-wrap{position:sticky;top:0;z-index:50;background:#0d2137;padding:10px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--card-border);}
+.progress-track{flex:1;height:10px;background:#1e3a55;border-radius:999px;overflow:hidden;}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,#00d4aa,#3b82f6);transition:width .4s ease;border-radius:999px;}
+.progress-label{font-size:12.5px;color:var(--text-dim);min-width:70px;text-align:right;}
+
+.toc{position:sticky;top:46px;z-index:40;background:#0a1628;padding:9px 16px;display:flex;gap:7px;overflow-x:auto;border-bottom:1px solid var(--card-border);}
+.toc a{flex:0 0 auto;width:28px;height:28px;border-radius:50%;background:#0d2137;border:1px solid var(--card-border);color:var(--text-dim);display:flex;align-items:center;justify-content:center;font-size:11.5px;text-decoration:none;transition:.2s;}
+.toc a:hover{background:#0d2a45;color:#00d4aa;border-color:#00d4aa;}
+.toc a.done{background:#0a2e1a;border-color:#4ade80;color:#4ade80;}
+
+main{max-width:860px;margin:0 auto;padding:22px 14px 60px;}
+.card{background:#0d2137;border:1px solid #1e3a55;border-radius:var(--radius);padding:20px 20px 22px;margin-bottom:20px;}
+.card:not(.final-card){content-visibility:auto;contain-intrinsic-size:1px 640px;}
+.card-head{display:flex;align-items:center;gap:12px;margin-bottom:4px;flex-wrap:wrap;}
+.card-num{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#00d4aa,#3b82f6);display:flex;align-items:center;justify-content:center;font-weight:800;color:#06141f;font-size:14px;flex:0 0 auto;}
+.card-title{font-size:17px;font-weight:700;margin:0;}
+.dyn-tag{display:inline-block;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#00d4aa;background:#0a2e2a;border:1px solid #14513f;padding:2px 8px;border-radius:999px;}
+.statement{color:var(--text-dim);font-size:14px;margin:10px 0 14px;padding:11px 13px;background:#0a1f35;border-left:3px solid #3b82f6;border-radius:8px;}
+.statement b{color:#cfe0f5;}
+.sub{margin:16px 0 6px;font-weight:600;color:#cfe0f5;font-size:14px;}
+
+.field-row{display:flex;align-items:center;gap:9px;margin:7px 0;flex-wrap:wrap;}
+.field-row label{font-size:13.5px;color:var(--text-dim);min-width:170px;}
+.ans-input{background:#0d2137;border:1px solid #2b4863;color:var(--text);padding:7px 9px;border-radius:8px;font-size:13.5px;width:100px;}
+.ans-input:focus{outline:none;border-color:#3b82f6;}
+.ans-input.correct{background:var(--correct-input);border-color:var(--correct-border);color:#bbf7d0;}
+.ans-input.incorrect{background:var(--incorrect-input);border-color:var(--incorrect-border);color:#fecaca;}
+
+.choice-group{display:flex;gap:7px;flex-wrap:wrap;margin:7px 0;}
+.choice-btn,.match-btn{background:var(--opt-bg);border:1px solid #1e3a55;color:var(--text);padding:8px 13px;border-radius:9px;font-size:13px;cursor:pointer;transition:.15s;}
+.choice-btn:hover,.match-btn:hover{background:var(--opt-hover);}
+.choice-btn.selected,.match-btn.selected{border-color:#3b82f6;background:#0d2a45;}
+.choice-btn.correct,.match-btn.correct{background:var(--correct-bg);border-color:var(--correct-border);color:#bbf7d0;}
+.choice-btn.incorrect,.match-btn.incorrect{background:var(--incorrect-bg);border-color:var(--incorrect-border);color:#fecaca;}
+.match-btn.locked{opacity:.55;cursor:default;}
+
+.verify-btn{margin-top:12px;background:linear-gradient(90deg,#00d4aa,#3b82f6);color:#06141f;border:none;padding:10px 18px;border-radius:9px;font-weight:700;font-size:13.5px;cursor:pointer;}
+.verify-btn:hover{filter:brightness(1.08);}
+
+.feedback-msg{display:none;margin-top:12px;padding:10px 13px;border-radius:9px;font-size:13.5px;border:1px solid;}
+.feedback-msg.success{background:var(--correct-bg);border-color:#4ade8055;color:#bbf7d0;}
+.feedback-msg.error{background:var(--incorrect-bg);border-color:#f8717155;color:#fecaca;}
+
+table.fill-table{width:100%;border-collapse:collapse;margin:10px 0;}
+table.fill-table th, table.fill-table td{border:1px solid #1e3a55;padding:7px 9px;text-align:center;font-size:13px;}
+table.fill-table th{background:#0a1f35;color:#9fc1e0;}
+
+.mini-plane{width:100%;max-width:300px;display:block;margin:10px auto;border-radius:8px;}
+.graph-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:12px 0;}
+.graph-card{background:#0a1f35;border:1px solid #1e3a55;border-radius:10px;padding:10px;text-align:center;}
+.graph-card .choice-group{justify-content:center;}
+.graph-card p{font-size:12px;color:var(--text-dim);margin:4px 0 6px;}
+
+.drop-zones{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
+.drop-zone{min-height:130px;background:#0a1f35;border:2px dashed #2b4863;border-radius:12px;padding:10px;}
+.drop-zone h4{margin:0 0 8px;font-size:12.5px;color:var(--text-dim);text-align:center;}
+.drag-card{background:#0d2137;border:1px solid #2b4863;padding:9px 11px;border-radius:9px;margin-bottom:7px;cursor:pointer;font-size:12.5px;transition:.15s;}
+.drag-card:hover{border-color:#3b82f6;}
+.drag-card.selected{border-color:#00d4aa;background:#0d2a3f;}
+.drag-card.placed-correct{background:var(--correct-bg);border-color:var(--correct-border);cursor:default;}
+.drag-card.placed-wrong{background:var(--incorrect-bg);border-color:var(--incorrect-border);}
+.hint-text{font-size:12px;color:#7dd3fc;margin-top:8px;}
+
+.match-wrap{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:12px;}
+.match-col .match-btn{display:block;width:100%;text-align:left;margin-bottom:7px;font-family:Consolas,monospace;font-size:12.5px;}
+.match-col h5{font-size:12px;color:var(--text-dim);margin:0 0 8px;text-transform:uppercase;letter-spacing:.5px;}
+
+.item-block{border-top:1px dashed #1e3a55;padding-top:14px;margin-top:14px;}
+.item-block:first-child{border-top:none;margin-top:0;padding-top:0;}
+.func-label{font-family:Consolas,monospace;color:#7dd3fc;font-size:13.5px;background:#0a1f35;padding:4px 10px;border-radius:6px;display:inline-block;margin-bottom:10px;}
+
+.final-card{background:linear-gradient(135deg,#0a2e2a,#0a1f35);text-align:center;border:1px solid #14513f;}
+.final-card h2{font-size:24px;margin-bottom:4px;}
+.final-stat{font-size:42px;font-weight:800;background:linear-gradient(90deg,#00d4aa,#3b82f6);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.final-card p{color:var(--text-dim);font-size:13.5px;}
+
+footer{text-align:center;color:#4b6178;font-size:11.5px;padding:20px;}
+
+@media(max-width:560px){
+  .field-row label{min-width:100%;}
+  .match-wrap{grid-template-columns:1fr;}
+  .drop-zones{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="eyebrow">Seminario Nivelatorio de Matemática · INSPT‑UTN</div>
+  <h1>Trabajo Práctico N°4: Funciones</h1>
+  <p>Unidad 4 — Variables, dominio, funciones lineales, cuadráticas y polinómicas de grado 3. </p> <p>Resolvé cada ejercicio y recibí retroalimentación inmediata.</p>
+  <span class="badge">17 ejercicios · feedback al instante</span>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <span class="progress-label" id="progressLabel">0 / 17</span>
+</div>
+<nav class="toc" id="toc"></nav>
+
+<main id="mainEl">
+
+<!-- EJERCICIO 1 -->
+<section class="card" id="ej1" data-idx="1">
+  <div class="card-head"><div class="card-num">1</div><h3 class="card-title">¿Es función?</h3><span class="dyn-tag">Arrastrar y clasificar</span></div>
+  <div class="statement">Dadas las siguientes relaciones, indicá cuáles corresponden a <b>funciones</b>. Hacé clic en cada tarjeta y luego en la caja correcta.</div>
+  <div id="ej1-cards"></div>
+  <div class="drop-zones">
+    <div class="drop-zone" id="zone-fn" data-zone="fn"><h4>✅ Es función</h4></div>
+    <div class="drop-zone" id="zone-nofn" data-zone="nofn"><h4>❌ No es función</h4></div>
+  </div>
+  <p class="hint-text" id="ej1-hint"></p>
+</section>
+
+<!-- EJERCICIO 2 -->
+<section class="card" id="ej2" data-idx="2">
+  <div class="card-head"><div class="card-num">2</div><h3 class="card-title">Funciones a partir de gráficas</h3><span class="dyn-tag">Opción múltiple</span></div>
+  <div class="statement">Dadas las siguientes gráficas, indicá cuáles corresponden a funciones <b>f : ℝ → ℝ</b>. Recordá el criterio de la recta vertical: si una recta vertical corta a la curva en más de un punto, no es función.</div>
+  <div class="graph-grid">
+    <div class="graph-card">
+      <svg viewBox="0 0 150 150" class="mini-plane"><rect width="150" height="150" fill="#f8f9ff"/><line x1="0" y1="75" x2="150" y2="75" stroke="#dde3f0" stroke-width="1.5"/><line x1="75" y1="0" x2="75" y2="150" stroke="#dde3f0" stroke-width="1.5"/><circle cx="75" cy="75" r="40" fill="none" stroke="#3b82f6" stroke-width="3"/></svg>
+      <p>Gráfica a)</p>
+      <div class="choice-group" id="g2a"></div>
+    </div>
+    <div class="graph-card">
+      <svg viewBox="0 0 150 150" class="mini-plane"><rect width="150" height="150" fill="#f8f9ff"/><line x1="0" y1="75" x2="150" y2="75" stroke="#dde3f0" stroke-width="1.5"/><line x1="75" y1="0" x2="75" y2="150" stroke="#dde3f0" stroke-width="1.5"/><line x1="10" y1="140" x2="140" y2="10" stroke="#3b82f6" stroke-width="3"/></svg>
+      <p>Gráfica b)</p>
+      <div class="choice-group" id="g2b"></div>
+    </div>
+    <div class="graph-card">
+      <svg viewBox="0 0 150 150" class="mini-plane"><rect width="150" height="150" fill="#f8f9ff"/><line x1="0" y1="75" x2="150" y2="75" stroke="#dde3f0" stroke-width="1.5"/><line x1="75" y1="0" x2="75" y2="150" stroke="#dde3f0" stroke-width="1.5"/><path d="M130,10 Q90,20 30,75 Q90,130 130,140" fill="none" stroke="#3b82f6" stroke-width="3"/></svg>
+      <p>Gráfica c)</p>
+      <div class="choice-group" id="g2c"></div>
+    </div>
+    <div class="graph-card">
+      <svg viewBox="0 0 150 150" class="mini-plane"><rect width="150" height="150" fill="#f8f9ff"/><line x1="0" y1="75" x2="150" y2="75" stroke="#dde3f0" stroke-width="1.5"/><line x1="75" y1="0" x2="75" y2="150" stroke="#dde3f0" stroke-width="1.5"/><path d="M15,130 C45,30 65,30 75,75 C85,120 105,120 135,20" fill="none" stroke="#3b82f6" stroke-width="3"/></svg>
+      <p>Gráfica d)</p>
+      <div class="choice-group" id="g2d"></div>
+    </div>
+  </div>
+</section>
+
+<!-- EJERCICIO 3 -->
+<section class="card" id="ej3" data-idx="3">
+  <div class="card-head"><div class="card-num">3</div><h3 class="card-title">Expresar y tabular funciones</h3><span class="dyn-tag">Completar</span></div>
+  <div class="statement">Escribí una expresión que represente cada función (aclarando el dominio). Luego completá la tabla de valores.</div>
+
+  <div class="item-block">
+    <p class="sub">a) y es el cubo de un número real x.</p>
+    <div class="field-row"><label>Expresión:</label><div class="choice-group" id="e3a-expr"></div></div>
+    <div class="field-row"><label>Dominio:</label><div class="choice-group" id="e3a-dom"></div></div>
+    <table class="fill-table"><tr><th>x</th><th>-1/2</th><th>0</th><th>1</th></tr>
+      <tr><td>y</td><td><input class="ans-input" id="e3a-y1" style="width:70px"></td><td><input class="ans-input" id="e3a-y2" style="width:70px"></td><td><input class="ans-input" id="e3a-y3" style="width:70px"></td></tr>
+    </table>
+  </div>
+
+  <div class="item-block">
+    <p class="sub">b) y es el consecutivo del doble de un número entero x.</p>
+    <div class="field-row"><label>Expresión:</label><div class="choice-group" id="e3b-expr"></div></div>
+    <div class="field-row"><label>Dominio:</label><div class="choice-group" id="e3b-dom"></div></div>
+    <table class="fill-table"><tr><th>x</th><th>-1/2</th><th>0</th><th>1</th></tr>
+      <tr><td>y</td>
+        <td><div class="choice-group" id="e3b-y1" style="justify-content:center"></div></td>
+        <td><input class="ans-input" id="e3b-y2" style="width:70px"></td>
+        <td><input class="ans-input" id="e3b-y3" style="width:70px"></td>
+      </tr>
+    </table>
+  </div>
+  <button class="verify-btn" data-check="3">Verificar respuestas</button>
+  <div class="feedback-msg" id="e3-msg"></div>
+</section>
+
+<!-- EJERCICIO 4 -->
+<section class="card" id="ej4" data-idx="4">
+  <div class="card-head"><div class="card-num">4</div><h3 class="card-title">f(x) = 2x² − x + 1</h3><span class="dyn-tag">Completar</span></div>
+  <div class="statement">Sea f : ℝ → ℝ / f(x) = 2x² − x + 1.</div>
+  <div class="field-row"><label>a) Calculá f(2):</label><input class="ans-input" id="e4a"></div>
+  <div class="field-row"><label>b) Valores de x cuya imagen es 1:</label><input class="ans-input" id="e4b-x1" placeholder="x₁"><input class="ans-input" id="e4b-x2" placeholder="x₂"></div>
+  <div class="field-row"><label>c) Imagen del opuesto de 1 — f(−1):</label><input class="ans-input" id="e4c"></div>
+  <div class="field-row"><label>d) ¿Existe x tal que f(x) = −1?</label><div class="choice-group" id="e4d"></div></div>
+  <button class="verify-btn" data-check="4">Verificar respuestas</button>
+  <div class="feedback-msg" id="e4-msg"></div>
+</section>
+
+<!-- EJERCICIO 5 -->
+<section class="card" id="ej5" data-idx="5">
+  <div class="card-head"><div class="card-num">5</div><h3 class="card-title">Lectura de un gráfico</h3><span class="dyn-tag">Mixta</span></div>
+  <div class="statement">A continuación se presenta la gráfica de una función f : Df → ℝ. Observala con atención y respondé.</div>
+  <div id="e5-graph"></div>
+  <div class="field-row"><label>a) Dominio de la función:</label><div class="choice-group" id="e5a"></div></div>
+  <div class="field-row"><label>b) Raíces de f:</label><input class="ans-input" id="e5b-x1" placeholder="x₁"><input class="ans-input" id="e5b-x2" placeholder="x₂"></div>
+  <div class="field-row"><label>c) Imagen de −2 — f(−2):</label><input class="ans-input" id="e5c"></div>
+  <div class="field-row"><label>d) ¿Existe x tal que f(x) = −3?</label><div class="choice-group" id="e5d"></div></div>
+  <div class="field-row"><label>&nbsp;&nbsp;Si es sí, indicá los valores:</label><input class="ans-input" id="e5d-x1" placeholder="x₁"><input class="ans-input" id="e5d-x2" placeholder="x₂"></div>
+  <div class="field-row"><label>e) Ordenada al origen:</label><input class="ans-input" id="e5e"></div>
+  <div class="field-row"><label>f) Conjunto imagen de f:</label><div class="choice-group" id="e5f"></div></div>
+  <div class="field-row"><label>g) Valor de f(−1/2):</label><input class="ans-input" id="e5g"></div>
+  <div class="field-row"><label>h) ¿Pasa por el punto (1; −4)?</label><div class="choice-group" id="e5h"></div></div>
+  <button class="verify-btn" data-check="5">Verificar respuestas</button>
+  <div class="feedback-msg" id="e5-msg"></div>
+</section>
+
+<!-- EJERCICIO 6 -->
+<section class="card" id="ej6" data-idx="6">
+  <div class="card-head"><div class="card-num">6</div><h3 class="card-title">f(x) = 1/x</h3><span class="dyn-tag">Completar</span></div>
+  <div class="statement">Sea f : Df → ℝ / f(x) = 1/x.</div>
+  <div class="field-row"><label>a) Dominio más amplio posible:</label><div class="choice-group" id="e6a"></div></div>
+  <div class="field-row"><label>b) Preimagen de 3:</label><input class="ans-input" id="e6b"></div>
+  <div class="field-row"><label>c) ¿Tiene raíces la función?</label><div class="choice-group" id="e6c"></div></div>
+  <table class="fill-table"><tr><th>x</th><th>-3/4</th><th>-1</th><th>2</th></tr>
+    <tr><td>y</td><td><input class="ans-input" id="e6d-y1" style="width:70px"></td><td><input class="ans-input" id="e6d-y2" style="width:70px"></td><td><input class="ans-input" id="e6d-y3" style="width:70px"></td></tr>
+  </table>
+  <button class="verify-btn" data-check="6">Verificar respuestas</button>
+  <div class="feedback-msg" id="e6-msg"></div>
+</section>
+
+<!-- EJERCICIO 7 -->
+<section class="card" id="ej7" data-idx="7">
+  <div class="card-head"><div class="card-num">7</div><h3 class="card-title">Uvas a $4500 el kilo</h3><span class="dyn-tag">Completar</span></div>
+  <div class="statement">En una verdulería, el kilo de uvas se vende a $4500.</div>
+  <div class="field-row"><label>a) Expresión de p en función de c:</label><div class="choice-group" id="e7a"></div></div>
+  <div class="field-row"><label>b) ¿La relación entre c y p es función?</label><div class="choice-group" id="e7b-fn"></div></div>
+  <div class="field-row"><label>&nbsp;&nbsp;Dominio:</label><div class="choice-group" id="e7b-dom"></div></div>
+  <div class="field-row"><label>c) Kilos comprados si pagó $7425:</label><input class="ans-input" id="e7c"> kg</div>
+  <button class="verify-btn" data-check="7">Verificar respuestas</button>
+  <div class="feedback-msg" id="e7-msg"></div>
+</section>
+
+<!-- EJERCICIO 8 -->
+<section class="card" id="ej8" data-idx="8">
+  <div class="card-head"><div class="card-num">8</div><h3 class="card-title">Trote a velocidad constante</h3><span class="dyn-tag">Completar + gráfico</span></div>
+  <div class="statement">Una persona trota a velocidad constante de 8,2 km/h. t = tiempo (horas), d = distancia recorrida (km).</div>
+  <div class="field-row"><label>a) Expresión de d en función de t:</label><div class="choice-group" id="e8a"></div></div>
+  <div class="field-row"><label>b) Distancia recorrida en 20 min (1/3 h):</label><input class="ans-input" id="e8b"> km</div>
+  <button class="verify-btn" data-check="8">Verificar respuestas</button>
+  <div class="feedback-msg" id="e8-msg"></div>
+  <p class="sub">c) Gráfico de la función:</p>
+  <div id="e8-graph"></div>
+</section>
+
+<!-- EJERCICIO 9 -->
+<section class="card" id="ej9" data-idx="9">
+  <div class="card-head"><div class="card-num">9</div><h3 class="card-title">Movimiento de una partícula</h3><span class="dyn-tag">Lectura de gráfico</span></div>
+  <div class="statement">t = tiempo (segundos), d = distancia recorrida (metros). Observá el gráfico d(t):</div>
+  <div id="e9-graph"></div>
+  <div class="field-row"><label>a) Dominio de d(t):</label><div class="choice-group" id="e9a"></div></div>
+  <div class="field-row"><label>b) Distancia luego de 2 s:</label><input class="ans-input" id="e9b"> m</div>
+  <div class="field-row"><label>c) ¿Cuánto tardó en recorrer 12 m?</label><input class="ans-input" id="e9c"> s</div>
+  <div class="field-row"><label>d) Distancia total recorrida:</label><input class="ans-input" id="e9d"> m</div>
+  <button class="verify-btn" data-check="9">Verificar respuestas</button>
+  <div class="feedback-msg" id="e9-msg"></div>
+</section>
+
+<!-- EJERCICIO 10 -->
+<section class="card" id="ej10" data-idx="10">
+  <div class="card-head"><div class="card-num">10</div><h3 class="card-title">Funciones lineales</h3><span class="dyn-tag">Completar + gráfico</span></div>
+  <div class="statement">Para cada función lineal, indicá sus intersecciones con los ejes, pendiente, ordenada al origen, si es creciente/decreciente/constante y calculá f(−3).</div>
+  <div id="ej10-body"></div>
+  <button class="verify-btn" data-check="10">Verificar respuestas</button>
+  <div class="feedback-msg" id="e10-msg"></div>
+</section>
+
+<!-- EJERCICIO 11 -->
+<section class="card" id="ej11" data-idx="11">
+  <div class="card-head"><div class="card-num">11</div><h3 class="card-title">Ecuación de la recta</h3><span class="dyn-tag">Completar</span></div>
+  <div class="statement">Encontrá la ecuación y = m·x + b de la recta que cumple cada condición.</div>
+  <div id="ej11-body"></div>
+  <button class="verify-btn" data-check="11">Verificar respuestas</button>
+  <div class="feedback-msg" id="e11-msg"></div>
+</section>
+
+<!-- EJERCICIO 12 -->
+<section class="card" id="ej12" data-idx="12">
+  <div class="card-head"><div class="card-num">12</div><h3 class="card-title">Funciones cuadráticas</h3><span class="dyn-tag">Completa + opción múltiple</span></div>
+  <div class="statement">Para cada función cuadrática: encontrá sus intersecciones con los ejes, el vértice, el conjunto imagen, y elegí las formas (canónica / factorizada / general) que faltan.</div>
+  <div id="ej12-body"></div>
+  <button class="verify-btn" data-check="12">Verificar respuestas</button>
+  <div class="feedback-msg" id="e12-msg"></div>
+</section>
+
+<!-- EJERCICIO 13 -->
+<section class="card" id="ej13" data-idx="13">
+  <div class="card-head"><div class="card-num">13</div><h3 class="card-title">Área de un rectángulo</h3><span class="dyn-tag">Mixta</span></div>
+  <div class="statement">Si b es la base de un rectángulo (cm) cuyo perímetro es 40 cm, su área (cm²) es A(b) = −b(b − 20).</div>
+  <div class="field-row"><label>a) ¿Es A(b) cuadrática?</label><div class="choice-group" id="e13-quad"></div></div>
+  <div class="field-row"><label>&nbsp;&nbsp;¿En qué forma está expresada?</label><div class="choice-group" id="e13-form"></div></div>
+  <div class="field-row"><label>b) Área si la base mide 4 cm:</label><input class="ans-input" id="e13-area"> cm²</div>
+  <div class="field-row"><label>&nbsp;&nbsp;Altura en ese caso:</label><input class="ans-input" id="e13-alt"> cm</div>
+  <div class="field-row"><label>c) Base para área máxima:</label><input class="ans-input" id="e13-max"> cm</div>
+  <button class="verify-btn" data-check="13">Verificar respuestas</button>
+  <div class="feedback-msg" id="e13-msg"></div>
+  <div id="e13-graph"></div>
+</section>
+
+<!-- EJERCICIO 14 -->
+<section class="card" id="ej14" data-idx="14">
+  <div class="card-head"><div class="card-num">14</div><h3 class="card-title">Pelota en caída libre</h3><span class="dyn-tag">Completar</span></div>
+  <div class="statement">Desde un balcón a 9 m de altura se deja caer una pelota: h(t) = 9 − 4,9t² (t ≥ 0, en segundos).</div>
+  <div class="field-row"><label>a) Altura al segundo de caer:</label><input class="ans-input" id="e14a"> m</div>
+  <div class="field-row"><label>b) Tiempo en llegar al suelo:</label><input class="ans-input" id="e14b"> s</div>
+  <button class="verify-btn" data-check="14">Verificar respuestas</button>
+  <div class="feedback-msg" id="e14-msg"></div>
+  <div id="e14-graph"></div>
+</section>
+
+<!-- EJERCICIO 15 -->
+<section class="card" id="ej15" data-idx="15">
+  <div class="card-head"><div class="card-num">15</div><h3 class="card-title">Funciones cúbicas: coeficientes</h3><span class="dyn-tag">Completar tabla</span></div>
+  <div class="statement">Identificá el coeficiente principal y el término independiente de cada función cúbica.</div>
+  <div id="ej15-body"></div>
+  <button class="verify-btn" data-check="15">Verificar respuestas</button>
+  <div class="feedback-msg" id="e15-msg"></div>
+</section>
+
+<!-- EJERCICIO 16 -->
+<section class="card" id="ej16" data-idx="16">
+  <div class="card-head"><div class="card-num">16</div><h3 class="card-title">Forma factorizada ↔ forma general</h3><span class="dyn-tag">Relacionar columnas</span></div>
+  <div class="statement">Hacé clic en una expresión de la columna izquierda y luego en su forma desarrollada correspondiente de la derecha.</div>
+  <div class="match-wrap">
+    <div class="match-col"><h5>Forma factorizada</h5><div id="ej16-left"></div></div>
+    <div class="match-col"><h5>Forma desarrollada</h5><div id="ej16-right"></div></div>
+  </div>
+  <div class="feedback-msg" id="e16-msg"></div>
+</section>
+
+<!-- EJERCICIO 17 -->
+<section class="card" id="ej17" data-idx="17">
+  <div class="card-head"><div class="card-num">17</div><h3 class="card-title">Raíces de funciones cúbicas</h3><span class="dyn-tag">Completar tabla</span></div>
+  <div class="statement">Hallá las raíces de cada función cúbica (en cualquier orden). Si hay raíz doble, escribila dos veces. Podés usar decimales aproximados para raíces irracionales.</div>
+  <div id="ej17-body"></div>
+  <button class="verify-btn" data-check="17">Verificar respuestas</button>
+  <div class="feedback-msg" id="e17-msg"></div>
+</section>
+
+<!-- FINAL -->
+<section class="card final-card" id="final">
+  <h2>🎓 Tu avance en el TP4</h2>
+  <div class="final-stat" id="finalStat">0%</div>
+  <p id="finalText">Completá los 17 ejercicios para terminar el Trabajo Práctico N°4.</p>
+</section>
+
+</main>
+
+<footer>Basado en: Seminario Nivelatorio de Matemática — INSPT, Universidad Tecnológica Nacional · Unidad 4: Funciones</footer>
+
+<script>
+/* =====================================================================
+   ARQUITECTURA OPTIMIZADA
+   - 1 solo listener de click delegado (en vez de ~150+ listeners individuales)
+   - Construcción perezosa (lazy) de cada ejercicio vía IntersectionObserver:
+     el HTML/SVG pesado de un ejercicio recién se genera cuando el usuario
+     está por llegar a esa sección, no todo de una al cargar la página.
+   - content-visibility:auto en cada tarjeta: el navegador ni siquiera
+     calcula layout/paint de las secciones fuera de pantalla.
+   - Grillas de los gráficos con <pattern> SVG (costo O(1) en nodos del DOM,
+     en vez de una <line> + <text> por cada unidad del eje).
+   - Construcción de HTML con arrays + join() en vez de concatenación
+     repetida de strings.
+   ===================================================================== */
+
+const $  = (s,p=document)=>p.querySelector(s);
+const $all = (s,p=document)=>[...p.querySelectorAll(s)];
+const TOTAL = 17;
+const done = new Set();
+
+/* ---------- utilidades numéricas ---------- */
+function parseNum(str){
+  if(typeof str !== 'string') return NaN;
+  str = str.trim().replace(',', '.');
+  if(str==='') return NaN;
+  if(str.includes('/')){
+    const parts = str.split('/');
+    if(parts.length!==2) return NaN;
+    const n=parseFloat(parts[0]), d=parseFloat(parts[1]);
+    if(isNaN(n)||isNaN(d)||d===0) return NaN;
+    return n/d;
+  }
+  return parseFloat(str);
+}
+function extractNumbers(str){
+  if(typeof str!=='string') return [];
+  const norm = str.replace(',', '.');
+  const matches = norm.match(/-?\d+(\.\d+)?(\/\d+(\.\d+)?)?/g) || [];
+  return matches.map(parseNum).filter(n=>!isNaN(n));
+}
+
+/* ---------- progreso ---------- */
+function markDone(n){
+  if(done.has(n)) return;
+  done.add(n);
+  const link = $('#toc a[data-n="'+n+'"]');
+  if(link) link.classList.add('done');
+  updateProgress();
+}
+function updateProgress(){
+  const pct = Math.round(done.size/TOTAL*100);
+  $('#progressFill').style.width = pct+'%';
+  $('#progressLabel').textContent = done.size+' / '+TOTAL;
+  $('#finalStat').textContent = pct+'%';
+  const t = $('#finalText');
+  if(pct===0) t.textContent='Completá los 17 ejercicios para terminar el Trabajo Práctico N°4.';
+  else if(pct<50) t.textContent='¡Buen arranque! Seguí practicando con los siguientes ejercicios.';
+  else if(pct<100) t.textContent='¡Vas muy bien! Ya resolviste más de la mitad del TP4.';
+  else t.textContent='¡Completaste todo el TP4 de Funciones! 🎉 Gran trabajo.';
+}
+function buildToc(){
+  const parts=[];
+  for(let i=1;i<=17;i++) parts.push('<a href="#ej'+i+'" data-n="'+i+'">'+i+'</a>');
+  $('#toc').innerHTML = parts.join('');
+}
+function showMsg(id, success, text){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.style.display='block';
+  el.className='feedback-msg '+(success?'success':'error');
+  el.textContent=text;
+}
+function finish(n, results, msgId){
+  const all = results.every(Boolean);
+  showMsg(msgId, all, all?'¡Excelente! Todas las respuestas son correctas. 🎉':'Revisá los campos marcados en rojo y volvé a intentarlo.');
+  markDone(n);
+}
+
+/* ---------- helpers de evaluación (sin listeners propios: la UI se
+   resuelve toda con el único listener delegado de más abajo) ---------- */
+function choiceMarkup(id, options, correctVal, immediate){
+  const btns = options.map(o=>'<button type="button" class="choice-btn" data-val="'+o.val+'">'+o.label+'</button>').join('');
+  return '<div class="choice-group" id="'+id+'" data-correct="'+correctVal+'"'+(immediate?' data-immediate="1"':'')+'>'+btns+'</div>';
+}
+function fillChoice(container, options, correctVal, immediate){
+  if(!container) return;
+  container.dataset.correct = correctVal;
+  if(immediate) container.dataset.immediate = '1';
+  container.innerHTML = options.map(o=>'<button type="button" class="choice-btn" data-val="'+o.val+'">'+o.label+'</button>').join('');
+}
+function evalChoice(container){
+  const sel = container.dataset.selected;
+  const correct = container.dataset.correct;
+  const ok = sel===correct;
+  $all('.choice-btn',container).forEach(b=>{
+    b.classList.remove('correct','incorrect');
+    if(b.dataset.val===correct) b.classList.add('correct');
+    else if(b.dataset.val===sel && !ok) b.classList.add('incorrect');
+  });
+  return ok;
+}
+function evalNumeric(input, correctVal, tol=0.05){
+  const val = parseNum(input.value);
+  const ok = !isNaN(val) && Math.abs(val-correctVal)<=tol;
+  input.classList.remove('correct','incorrect');
+  input.classList.add(ok?'correct':'incorrect');
+  return ok;
+}
+function evalSet(inputs, correctArr, tol=0.02){
+  const vals = inputs.map(i=>parseNum(i.value));
+  const used = Array(correctArr.length).fill(false);
+  let allMatched = true;
+  vals.forEach(v=>{
+    if(isNaN(v)){ allMatched=false; return; }
+    const idx = correctArr.findIndex((c,i)=>!used[i] && Math.abs(c-v)<tol);
+    if(idx>=0) used[idx]=true; else allMatched=false;
+  });
+  const ok = allMatched && used.every(u=>u);
+  inputs.forEach(i=>{ i.classList.remove('correct','incorrect'); i.classList.add(ok?'correct':'incorrect'); });
+  return ok;
+}
+
+/* ---------- gráficos SVG livianos (grilla con <pattern>, O(1) nodos) ---------- */
+let pgCounter = 0;
+function niceStep(range){ if(range<=14) return 1; if(range<=30) return 2; if(range<=70) return 5; return 10; }
+function renderGraph(container, cfg){
+  if(!container) return;
+  const {xmin,xmax,ymin,ymax,segments=[],points=[]} = cfg;
+  const width = cfg.width||300, height=cfg.height||210;
+  const sx = x => (x-xmin)/(xmax-xmin)*width;
+  const sy = y => height-(y-ymin)/(ymax-ymin)*height;
+  const xStep = niceStep(xmax-xmin), yStep = niceStep(ymax-ymin);
+  const stepXpx = xStep/(xmax-xmin)*width;
+  const stepYpx = yStep/(ymax-ymin)*height;
+  const uid = 'pg'+(pgCounter++);
+  const axisX = sy(0), axisY = sx(0);
+  const xLabelY = axisX > height-16 ? height-4 : axisX+12;
+  const yEdge = axisY < 16;
+  const yLabelX = yEdge ? 3 : axisY-5;
+  const yAnchor = yEdge ? 'start' : 'end';
+
+  const parts = [
+    '<svg viewBox="0 0 '+width+' '+height+'" class="mini-plane">',
+    '<defs><pattern id="'+uid+'" width="'+stepXpx+'" height="'+stepYpx+'" patternUnits="userSpaceOnUse">',
+    '<path d="M '+stepXpx+' 0 L 0 0 0 '+stepYpx+'" fill="none" stroke="#dde3f0" stroke-width="1"/></pattern></defs>',
+    '<rect width="'+width+'" height="'+height+'" fill="#f8f9ff"/>',
+    '<rect width="'+width+'" height="'+height+'" fill="url(#'+uid+')"/>'
+  ];
+  if(ymin<=0&&ymax>=0) parts.push('<line x1="0" y1="'+axisX+'" x2="'+width+'" y2="'+axisX+'" stroke="#64748b" stroke-width="2"/>');
+  if(xmin<=0&&xmax>=0) parts.push('<line x1="'+axisY+'" y1="0" x2="'+axisY+'" y2="'+height+'" stroke="#64748b" stroke-width="2"/>');
+  for(let x=xmin; x<=xmax+1e-9; x+=xStep){
+    const xr=Math.round(x*100)/100;
+    if(Math.abs(xr)>1e-9) parts.push('<text x="'+sx(xr)+'" y="'+xLabelY+'" font-size="9" fill="#64748b" text-anchor="middle">'+xr+'</text>');
+  }
+  for(let y=ymin; y<=ymax+1e-9; y+=yStep){
+    const yr=Math.round(y*100)/100;
+    if(Math.abs(yr)>1e-9) parts.push('<text x="'+yLabelX+'" y="'+(sy(yr)+3)+'" font-size="9" fill="#64748b" text-anchor="'+yAnchor+'">'+yr+'</text>');
+  }
+  if(segments.length){
+    const d=segments.map((p,i)=>(i===0?'M':'L')+sx(p[0]).toFixed(1)+','+sy(p[1]).toFixed(1)).join(' ');
+    parts.push('<path d="'+d+'" fill="none" stroke="#3b82f6" stroke-width="2.5"/>');
+  }
+  points.forEach(p=>parts.push('<circle cx="'+sx(p[0])+'" cy="'+sy(p[1])+'" r="3.5" fill="#00d4aa"/>'));
+  parts.push('</svg>');
+  container.innerHTML = parts.join('');
+}
+function sampleLinear(m,b,xmin,xmax){ return [[xmin, m*xmin+b],[xmax, m*xmax+b]]; }
+function sampleQuad(a,h,k,xmin,xmax,n=34){
+  const pts=[];
+  for(let i=0;i<=n;i++){ const x=xmin+(xmax-xmin)*i/n; pts.push([x, a*(x-h)*(x-h)+k]); }
+  return pts;
+}
+
+/* =====================================================================
+   DATOS Y CONSTRUCTORES DE CADA EJERCICIO (sin cambios respecto del TP)
+   ===================================================================== */
+
+/* ---- 1 ---- */
+function buildEj1(){
+  const cardsData = [
+    {txt:'Kilos de manzana comprados → precio total a pagar', ans:'fn'},
+    {txt:'Un nombre → las personas que tienen ese nombre', ans:'nofn'},
+    {txt:'Cada persona → el país donde nació', ans:'fn'}
+  ];
+  $('#ej1-cards').innerHTML = cardsData.map((c,i)=>
+    '<div class="drag-card" data-ans="'+c.ans+'" data-id="c'+i+'">'+c.txt+'</div>'
+  ).join('');
+}
+
+/* ---- 2 ---- */
+function buildEj2(){
+  const yn = [{label:'Sí, es función',val:'si'},{label:'No es función',val:'no'}];
+  fillChoice($('#g2a'), yn, 'no', true);
+  fillChoice($('#g2b'), yn, 'si', true);
+  fillChoice($('#g2c'), yn, 'no', true);
+  fillChoice($('#g2d'), yn, 'si', true);
+}
+
+/* ---- 3 ---- */
+function buildEj3(){
+  fillChoice($('#e3a-expr'), [{label:'y = x³',val:'a'},{label:'y = 3x',val:'b'},{label:'y = x/3',val:'c'},{label:'y = x²',val:'d'}], 'a');
+  fillChoice($('#e3a-dom'), [{label:'ℝ',val:'a'},{label:'ℤ',val:'b'},{label:'ℕ',val:'c'},{label:'ℝ⁺',val:'d'}], 'a');
+  fillChoice($('#e3b-expr'), [{label:'y = 2x + 1',val:'a'},{label:'y = 2x',val:'b'},{label:'y = x + 1',val:'c'},{label:'y = 2(x+1)',val:'d'}], 'a');
+  fillChoice($('#e3b-dom'), [{label:'ℤ',val:'a'},{label:'ℝ',val:'b'},{label:'ℕ',val:'c'},{label:'ℚ',val:'d'}], 'a');
+  fillChoice($('#e3b-y1'), [{label:'Sí, está definida',val:'si'},{label:'No pertenece al dominio',val:'no'}], 'no');
+}
+function checkEj3(){
+  const r=[
+    evalChoice($('#e3a-expr')), evalChoice($('#e3a-dom')),
+    evalNumeric($('#e3a-y1'), -0.125, 0.01), evalNumeric($('#e3a-y2'), 0, 0.01), evalNumeric($('#e3a-y3'), 1, 0.01),
+    evalChoice($('#e3b-expr')), evalChoice($('#e3b-dom')), evalChoice($('#e3b-y1')),
+    evalNumeric($('#e3b-y2'), 1, 0.01), evalNumeric($('#e3b-y3'), 3, 0.01)
+  ];
+  finish(3, r, 'e3-msg');
+}
+
+/* ---- 4 ---- */
+function buildEj4(){
+  fillChoice($('#e4d'), [{label:'Sí',val:'si'},{label:'No',val:'no'}], 'no');
+}
+function checkEj4(){
+  const r=[
+    evalNumeric($('#e4a'), 7),
+    evalSet([$('#e4b-x1'),$('#e4b-x2')], [0,0.5]),
+    evalNumeric($('#e4c'), 4),
+    evalChoice($('#e4d'))
+  ];
+  finish(4, r, 'e4-msg');
+}
+
+/* ---- 5 ---- */
+function buildEj5(){
+  renderGraph($('#e5-graph'), {xmin:-4,xmax:6,ymin:-6,ymax:6, segments:[[-4,6],[1,-4],[6,6]], points:[[-1,0],[0,-2],[3,0]]});
+  fillChoice($('#e5a'), [{label:'ℝ',val:'a'},{label:'[0,+∞)',val:'b'},{label:'ℤ',val:'c'},{label:'ℝ−{0}',val:'d'}], 'a');
+  fillChoice($('#e5d'), [{label:'Sí',val:'si'},{label:'No',val:'no'}], 'si');
+  fillChoice($('#e5f'), [{label:'[−4,+∞)',val:'a'},{label:'(−∞,−4]',val:'b'},{label:'ℝ',val:'c'},{label:'[0,+∞)',val:'d'}], 'a');
+  fillChoice($('#e5h'), [{label:'Sí',val:'si'},{label:'No',val:'no'}], 'si');
+}
+function checkEj5(){
+  const r=[
+    evalChoice($('#e5a')),
+    evalSet([$('#e5b-x1'),$('#e5b-x2')], [-1,3]),
+    evalNumeric($('#e5c'), 2),
+    evalChoice($('#e5d')),
+    evalSet([$('#e5d-x1'),$('#e5d-x2')], [0.5,1.5], 0.15),
+    evalNumeric($('#e5e'), -2),
+    evalChoice($('#e5f')),
+    evalNumeric($('#e5g'), -1),
+    evalChoice($('#e5h'))
+  ];
+  finish(5, r, 'e5-msg');
+}
+
+/* ---- 6 ---- */
+function buildEj6(){
+  fillChoice($('#e6a'), [{label:'ℝ',val:'a'},{label:'ℝ−{0}',val:'b'},{label:'ℝ⁺',val:'c'},{label:'ℤ−{0}',val:'d'}], 'b');
+  fillChoice($('#e6c'), [{label:'Sí',val:'si'},{label:'No',val:'no'}], 'no');
+}
+function checkEj6(){
+  const r=[
+    evalChoice($('#e6a')),
+    evalNumeric($('#e6b'), 1/3, 0.01),
+    evalChoice($('#e6c')),
+    evalNumeric($('#e6d-y1'), -4/3, 0.02),
+    evalNumeric($('#e6d-y2'), -1, 0.01),
+    evalNumeric($('#e6d-y3'), 0.5, 0.01)
+  ];
+  finish(6, r, 'e6-msg');
+}
+
+/* ---- 7 ---- */
+function buildEj7(){
+  fillChoice($('#e7a'), [{label:'p = 4500c',val:'a'},{label:'p = c/4500',val:'b'},{label:'p = 4500 + c',val:'c'},{label:'c = 4500p',val:'d'}], 'a');
+  fillChoice($('#e7b-fn'), [{label:'Sí',val:'si'},{label:'No',val:'no'}], 'si');
+  fillChoice($('#e7b-dom'), [{label:'(0,+∞)',val:'a'},{label:'ℝ',val:'b'},{label:'[0,+∞)',val:'c'},{label:'ℤ⁺',val:'d'}], 'a');
+}
+function checkEj7(){
+  const r=[
+    evalChoice($('#e7a')), evalChoice($('#e7b-fn')), evalChoice($('#e7b-dom')),
+    evalNumeric($('#e7c'), 1.65, 0.02)
+  ];
+  finish(7, r, 'e7-msg');
+}
+
+/* ---- 8 ---- */
+function buildEj8(){
+  fillChoice($('#e8a'), [{label:'d = 8,2t',val:'a'},{label:'d = t/8,2',val:'b'},{label:'d = 8,2 + t',val:'c'},{label:'t = 8,2d',val:'d'}], 'a');
+}
+function checkEj8(){
+  const r=[ evalChoice($('#e8a')), evalNumeric($('#e8b'), 8.2/3, 0.05) ];
+  finish(8, r, 'e8-msg');
+  renderGraph($('#e8-graph'), {xmin:0,xmax:3,ymin:0,ymax:25,segments: sampleLinear(8.2,0,0,3)});
+}
+
+/* ---- 9 ---- */
+function buildEj9(){
+  renderGraph($('#e9-graph'), {xmin:0,xmax:8,ymin:0,ymax:20,segments:[[0,0],[2,4],[4.5,12],[7,17]],points:[[2,4],[4.5,12]]});
+  fillChoice($('#e9a'), [{label:'[0,7]',val:'a'},{label:'[0,+∞)',val:'b'},{label:'ℝ',val:'c'},{label:'(0,7)',val:'d'}], 'a');
+}
+function checkEj9(){
+  const r=[
+    evalChoice($('#e9a')),
+    evalNumeric($('#e9b'), 4, 0.1),
+    evalNumeric($('#e9c'), 4.5, 0.1),
+    evalNumeric($('#e9d'), 17, 0.1)
+  ];
+  finish(9, r, 'e9-msg');
+}
+
+/* ---- 10 ---- */
+const ej10Data = [
+  {label:'a) f(x) = 3x + 1', m:3, b:1, intX:-1/3, intY:1, crec:'creciente', f3:-8},
+  {label:'b) f(x) = −2x − 4', m:-2, b:-4, intX:-2, intY:-4, crec:'decreciente', f3:2},
+  {label:'c) f(x) = 2 − x', m:-1, b:2, intX:2, intY:2, crec:'decreciente', f3:5},
+  {label:'d) f(x) = (2/3)x + 6', m:2/3, b:6, intX:-9, intY:6, crec:'creciente', f3:4}
+];
+function buildEj10(){
+  const html = ej10Data.map((it,i)=>
+    '<div class="item-block"><div class="func-label">'+it.label+'</div>'+
+    '<div id="g10-'+i+'"></div>'+
+    '<div class="field-row"><label>Intersección eje x:</label><input class="ans-input" id="e10-'+i+'-ix"></div>'+
+    '<div class="field-row"><label>Intersección eje y:</label><input class="ans-input" id="e10-'+i+'-iy"></div>'+
+    '<div class="field-row"><label>Pendiente:</label><input class="ans-input" id="e10-'+i+'-m"></div>'+
+    '<div class="field-row"><label>Ordenada al origen:</label><input class="ans-input" id="e10-'+i+'-b"></div>'+
+    '<div class="field-row"><label>¿Crece, decrece o es constante?</label><div class="choice-group" id="e10-'+i+'-c"></div></div>'+
+    '<div class="field-row"><label>f(−3):</label><input class="ans-input" id="e10-'+i+'-f3"></div></div>'
+  ).join('');
+  $('#ej10-body').innerHTML = html;
+  ej10Data.forEach((it,i)=>{
+    renderGraph($('#g10-'+i), {xmin:-5,xmax:5,ymin:-16,ymax:16,segments:sampleLinear(it.m,it.b,-5,5)});
+    fillChoice($('#e10-'+i+'-c'), [{label:'Creciente',val:'creciente'},{label:'Decreciente',val:'decreciente'},{label:'Constante',val:'constante'}], it.crec);
+  });
+}
+function checkEj10(){
+  let r=[];
+  ej10Data.forEach((it,i)=>{
+    r.push(evalNumeric($('#e10-'+i+'-ix'), it.intX, 0.05));
+    r.push(evalNumeric($('#e10-'+i+'-iy'), it.intY, 0.05));
+    r.push(evalNumeric($('#e10-'+i+'-m'), it.m, 0.02));
+    r.push(evalNumeric($('#e10-'+i+'-b'), it.b, 0.02));
+    r.push(evalChoice($('#e10-'+i+'-c')));
+    r.push(evalNumeric($('#e10-'+i+'-f3'), it.f3, 0.05));
+  });
+  finish(10, r, 'e10-msg');
+}
+
+/* ---- 11 ---- */
+const ej11Data = [
+  {label:'a) Pendiente 4, ordenada al origen −1', m:4, b:-1},
+  {label:'b) Pendiente 5, pasa por (−1; 3)', m:5, b:8},
+  {label:'c) Ordenada al origen 3, pasa por (1; 5)', m:2, b:3},
+  {label:'d) Es horizontal y pasa por (1; 2)', m:0, b:2},
+  {label:'e) Ordenada al origen −2, raíz x = 4', m:0.5, b:-2},
+  {label:'f) Paralela a y = 2x + 1, pasa por (−1; 2)', m:2, b:4},
+  {label:'g) Perpendicular a y = −3x − 5, pasa por (6; 3)', m:1/3, b:1}
+];
+function buildEj11(){
+  $('#ej11-body').innerHTML = ej11Data.map((it,i)=>
+    '<div class="item-block"><p class="sub">'+it.label+'</p>'+
+    '<div class="field-row"><label>y = </label>'+
+    '<input class="ans-input" id="e11-'+i+'-m" style="width:70px" placeholder="m"> · x + '+
+    '<input class="ans-input" id="e11-'+i+'-b" style="width:70px" placeholder="b"></div></div>'
+  ).join('');
+}
+function checkEj11(){
+  let r=[];
+  ej11Data.forEach((it,i)=>{
+    r.push(evalNumeric($('#e11-'+i+'-m'), it.m, 0.02));
+    r.push(evalNumeric($('#e11-'+i+'-b'), it.b, 0.02));
+  });
+  finish(11, r, 'e11-msg');
+}
+
+/* ---- 12 ---- */
+const ej12Data = [
+  {label:'a) f(x) = −2x² + 3x − 1', a:-2,h:0.75,k:0.125, roots:[0.5,1], intY:-1, dir:'max', xr:[-1,2.5],yr:[-3,1],
+   miss:[
+     {name:'Forma canónica', opts:[{t:'f(x) = 2(x − 3/4)² + 1/8',c:false},{t:'f(x) = −2(x − 3/4)² + 1/8',c:true},{t:'f(x) = −2(x + 3/4)² + 1/8',c:false}]},
+     {name:'Forma factorizada', opts:[{t:'f(x) = −2(x + 1/2)(x + 1)',c:false},{t:'f(x) = 2(x − 1/2)(x − 1)',c:false},{t:'f(x) = −2(x − 1/2)(x − 1)',c:true}]}
+   ]},
+  {label:'b) f(x) = 3(x − 2)(x + 4)', a:3,h:-1,k:-27, roots:[-4,2], intY:-24, dir:'min', xr:[-6,4],yr:[-30,10],
+   miss:[
+     {name:'Forma general', opts:[{t:'f(x) = 3x² + 6x − 24',c:true},{t:'f(x) = 3x² − 6x − 24',c:false},{t:'f(x) = 3x² + 6x + 24',c:false}]},
+     {name:'Forma canónica', opts:[{t:'f(x) = 3(x − 1)² − 27',c:false},{t:'f(x) = 3(x + 1)² − 27',c:true},{t:'f(x) = 3(x + 1)² + 27',c:false}]}
+   ]},
+  {label:'c) f(x) = 2(x − 1)² − 8', a:2,h:1,k:-8, roots:[-1,3], intY:-6, dir:'min', xr:[-3,5],yr:[-10,10],
+   miss:[
+     {name:'Forma general', opts:[{t:'f(x) = 2x² − 4x − 6',c:true},{t:'f(x) = 2x² + 4x − 6',c:false},{t:'f(x) = 2x² − 4x + 6',c:false}]},
+     {name:'Forma factorizada', opts:[{t:'f(x) = 2(x − 1)(x + 3)',c:false},{t:'f(x) = 2(x + 1)(x − 3)',c:true},{t:'f(x) = 2(x + 1)(x + 3)',c:false}]}
+   ]},
+  {label:'d) f(x) = −(1/3)(x + 2)² + 3', a:-1/3,h:-2,k:3, roots:[-5,1], intY:5/3, dir:'max', xr:[-7,3],yr:[-3,5],
+   miss:[
+     {name:'Forma general', opts:[{t:'f(x) = −(1/3)x² − (4/3)x + 5/3',c:true},{t:'f(x) = −(1/3)x² + (4/3)x + 5/3',c:false},{t:'f(x) = (1/3)x² − (4/3)x + 5/3',c:false}]},
+     {name:'Forma factorizada', opts:[{t:'f(x) = −(1/3)(x + 1)(x + 5)',c:false},{t:'f(x) = −(1/3)(x − 1)(x − 5)',c:false},{t:'f(x) = −(1/3)(x − 1)(x + 5)',c:true}]}
+   ]},
+  {label:'e) f(x) = −4x + 3x² − 4', a:3,h:2/3,k:-16/3, roots:[-2/3,2], intY:-4, dir:'min', xr:[-2,4],yr:[-7,5],
+   miss:[
+     {name:'Forma canónica', opts:[{t:'f(x) = 3(x − 2/3)² − 16/3',c:true},{t:'f(x) = 3(x + 2/3)² − 16/3',c:false},{t:'f(x) = 3(x − 2/3)² + 16/3',c:false}]},
+     {name:'Forma factorizada', opts:[{t:'f(x) = 3(x − 2/3)(x + 2)',c:false},{t:'f(x) = 3(x + 2/3)(x − 2)',c:true},{t:'f(x) = 3(x − 2/3)(x − 2)',c:false}]}
+   ]},
+  {label:'f) f(x) = −2(x + 1)(x − 3)', a:-2,h:1,k:8, roots:[-1,3], intY:6, dir:'max', xr:[-3,5],yr:[-5,10],
+   miss:[
+     {name:'Forma general', opts:[{t:'f(x) = −2x² + 4x + 6',c:true},{t:'f(x) = −2x² − 4x + 6',c:false},{t:'f(x) = 2x² + 4x + 6',c:false}]},
+     {name:'Forma canónica', opts:[{t:'f(x) = −2(x + 1)² + 8',c:false},{t:'f(x) = −2(x − 1)² − 8',c:false},{t:'f(x) = −2(x − 1)² + 8',c:true}]}
+   ]}
+];
+function buildEj12(){
+  const html = ej12Data.map((it,i)=>{
+    let h = '<div class="item-block"><div class="func-label">'+it.label+'</div><div id="g12-'+i+'"></div>'+
+      '<div class="field-row"><label>Raíces (eje x):</label><input class="ans-input" id="e12-'+i+'-r1" placeholder="x₁" style="width:70px"><input class="ans-input" id="e12-'+i+'-r2" placeholder="x₂" style="width:70px"></div>'+
+      '<div class="field-row"><label>Intersección eje y:</label><input class="ans-input" id="e12-'+i+'-iy" style="width:80px"></div>'+
+      '<div class="field-row"><label>Vértice (x;y):</label><input class="ans-input" id="e12-'+i+'-vx" placeholder="x" style="width:70px"><input class="ans-input" id="e12-'+i+'-vy" placeholder="y" style="width:70px"></div>'+
+      '<div class="field-row"><label>Conjunto imagen:</label><div class="choice-group" id="e12-'+i+'-im"></div></div>';
+    it.miss.forEach((m,mi)=>{ h += '<div class="field-row"><label>'+m.name+':</label></div><div class="choice-group" id="e12-'+i+'-m'+mi+'" style="margin-bottom:6px"></div>'; });
+    return h+'</div>';
+  }).join('');
+  $('#ej12-body').innerHTML = html;
+  ej12Data.forEach((it,i)=>{
+    renderGraph($('#g12-'+i), {xmin:it.xr[0],xmax:it.xr[1],ymin:it.yr[0],ymax:it.yr[1],segments:sampleQuad(it.a,it.h,it.k,it.xr[0],it.xr[1])});
+    const kRound = Math.round(it.k*1000)/1000;
+    const imgLabel = it.dir==='min' ? '['+kRound+', +∞)' : '(−∞, '+kRound+']';
+    const wrongImg = it.dir==='min' ? '(−∞, '+kRound+']' : '['+kRound+', +∞)';
+    fillChoice($('#e12-'+i+'-im'), [{label:imgLabel,val:'ok'},{label:wrongImg,val:'bad'},{label:'ℝ',val:'r'}], 'ok');
+    it.miss.forEach((m,mi)=>{
+      const opts = m.opts.map((o,oi)=>({label:o.t, val:'o'+oi}));
+      const correctVal = 'o'+m.opts.findIndex(o=>o.c);
+      fillChoice($('#e12-'+i+'-m'+mi), opts, correctVal);
+    });
+  });
+}
+function checkEj12(){
+  let r=[];
+  ej12Data.forEach((it,i)=>{
+    r.push(evalSet([$('#e12-'+i+'-r1'),$('#e12-'+i+'-r2')], it.roots, 0.03));
+    r.push(evalNumeric($('#e12-'+i+'-iy'), it.intY, 0.03));
+    r.push(evalNumeric($('#e12-'+i+'-vx'), it.h, 0.03));
+    r.push(evalNumeric($('#e12-'+i+'-vy'), it.k, 0.03));
+    r.push(evalChoice($('#e12-'+i+'-im')));
+    it.miss.forEach((m,mi)=> r.push(evalChoice($('#e12-'+i+'-m'+mi))) );
+  });
+  finish(12, r, 'e12-msg');
+}
+
+/* ---- 13 ---- */
+function buildEj13(){
+  fillChoice($('#e13-quad'), [{label:'Sí',val:'si'},{label:'No',val:'no'}], 'si');
+  fillChoice($('#e13-form'), [{label:'General',val:'g'},{label:'Canónica',val:'c'},{label:'Factorizada',val:'f'}], 'f');
+  renderGraph($('#e13-graph'), {xmin:0,xmax:20,ymin:0,ymax:110,segments:sampleQuad(-1,10,100,0,20),points:[[10,100]]});
+}
+function checkEj13(){
+  const r=[
+    evalChoice($('#e13-quad')), evalChoice($('#e13-form')),
+    evalNumeric($('#e13-area'), 64, 0.5), evalNumeric($('#e13-alt'), 16, 0.5), evalNumeric($('#e13-max'), 10, 0.3)
+  ];
+  finish(13, r, 'e13-msg');
+}
+
+/* ---- 14 ---- */
+function buildEj14(){
+  renderGraph($('#e14-graph'), {xmin:0,xmax:1.5,ymin:0,ymax:10,segments:sampleQuad(-4.9,0,9,0,1.36)});
+}
+function checkEj14(){
+  const r=[ evalNumeric($('#e14a'), 4.1, 0.1), evalNumeric($('#e14b'), 1.355, 0.03) ];
+  finish(14, r, 'e14-msg');
+}
+
+/* ---- 15 ---- */
+const ej15Data = [
+  {f:'f(x) = 4x³ − 5x² + 7x − 9', a:4, d:-9},
+  {f:'g(x) = −2x³ + 3x² + x − 8', a:-2, d:-8},
+  {f:'h(x) = 7x³ − 4x² + 6x', a:7, d:0},
+  {f:'p(x) = (3/4)x³ + (1/2)x² − 5x + 2/3', a:0.75, d:2/3},
+  {f:'e(x) = 12x³ − 7x² + 9x − 15', a:12, d:-15},
+  {f:'k(x) = (5/2)x³ − 6x² + (1/4)x − 7/3', a:2.5, d:-7/3}
+];
+function buildEj15(){
+  const rows = ej15Data.map((it,i)=>
+    '<tr><td style="font-family:Consolas,monospace;text-align:left">'+it.f+'</td>'+
+    '<td><input class="ans-input" id="e15-'+i+'-a" style="width:80px"></td>'+
+    '<td><input class="ans-input" id="e15-'+i+'-d" style="width:80px"></td></tr>'
+  ).join('');
+  $('#ej15-body').innerHTML = '<table class="fill-table"><tr><th>Función</th><th>Coeficiente principal</th><th>Término independiente</th></tr>'+rows+'</table>';
+}
+function checkEj15(){
+  let r=[];
+  ej15Data.forEach((it,i)=>{
+    r.push(evalNumeric($('#e15-'+i+'-a'), it.a, 0.02));
+    r.push(evalNumeric($('#e15-'+i+'-d'), it.d, 0.02));
+  });
+  finish(15, r, 'e15-msg');
+}
+
+/* ---- 16 ---- */
+const ej16Pairs = [
+  {id:'L1', left:'(x − 1)(x − 2)(x − 3)', right:'x³ − 6x² + 11x − 6'},
+  {id:'L2', left:'2(x − 1)(x − 2)(x − 3)', right:'2x³ − 12x² + 22x − 12'},
+  {id:'L3', left:'(x − 2)(x + 2)(x + 3)', right:'x³ + 3x² − 4x − 12'},
+  {id:'L4', left:'−(x − 2)(x − 1)(x + 4)', right:'−x³ − x² + 10x − 8'},
+  {id:'L5', left:'(x − 1)(x − 2)²', right:'x³ − 5x² + 8x − 4'},
+  {id:'L6', left:'(1/2)(x − 2)(x + 2)(x − 3)', right:'(1/2)x³ − (3/2)x² − 2x + 6'}
+];
+let ej16Selected = null;
+let ej16MatchedCount = 0;
+function buildEj16(){
+  $('#ej16-left').innerHTML  = ej16Pairs.map(p=>'<button type="button" class="match-btn" data-side="left" data-id="'+p.id+'">'+p.left+'</button>').join('');
+  const shuffled = [ej16Pairs[3],ej16Pairs[0],ej16Pairs[5],ej16Pairs[1],ej16Pairs[4],ej16Pairs[2]];
+  $('#ej16-right').innerHTML = shuffled.map(p=>'<button type="button" class="match-btn" data-side="right" data-match="'+p.id+'">'+p.right+'</button>').join('');
+}
+function handleMatchClick(btn){
+  if(btn.classList.contains('locked')) return;
+  if(btn.dataset.side==='left'){
+    $all('#ej16-left .match-btn').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+    ej16Selected = btn.dataset.id;
+  } else {
+    if(!ej16Selected) return;
+    markDone(16);
+    const leftBtn = $('#ej16-left .match-btn[data-id="'+ej16Selected+'"]');
+    if(btn.dataset.match===ej16Selected){
+      btn.classList.add('locked','correct');
+      leftBtn.classList.add('locked','correct');
+      leftBtn.classList.remove('selected');
+      ej16Selected=null;
+      ej16MatchedCount++;
+      if(ej16MatchedCount===6) showMsg('e16-msg', true, '¡Genial! Relacionaste correctamente las 6 expresiones.');
+    } else {
+      btn.classList.add('incorrect');
+      setTimeout(()=>btn.classList.remove('incorrect'), 600);
+    }
+  }
+}
+
+/* ---- 17 ---- */
+const ej17Data = [
+  {f:'f(x) = x³ − 6x² + 11x − 6', roots:[1,2,3]},
+  {f:'g(x) = x³ − 2x² − 5x + 6', roots:[-2,1,3]},
+  {f:'h(x) = x³ + 2x² − 5x − 6', roots:[-3,-1,2]},
+  {f:'p(x) = x³ − 3x² − 4x + 12', roots:[-2,2,3]},
+  {f:'q(x) = x³ + 4x² + x − 6', roots:[-3,-2,1]},
+  {f:'r(x) = 2x³ − 3x² − 11x + 6', roots:[-2,0.5,3]},
+  {f:'s(x) = 3x³ − 4x² − 5x + 2', roots:[-1,1/3,2]},
+  {f:'t(x) = x³ − 3x² + 4', roots:[-1,2,2]},
+  {f:'u(x) = x³ − 3x² − 2x + 8', roots:[2,2.5616,-1.5616]},
+  {f:'v(x) = x³ + 5x² + 3x − 9', roots:[-3,-3,1]}
+];
+function buildEj17(){
+  $('#ej17-body').innerHTML = ej17Data.map((it,i)=>
+    '<div class="item-block"><div class="func-label">'+it.f+'</div>'+
+    '<div class="field-row"><label>Raíces:</label>'+
+    '<input class="ans-input" id="e17-'+i+'-r1" placeholder="x₁" style="width:75px">'+
+    '<input class="ans-input" id="e17-'+i+'-r2" placeholder="x₂" style="width:75px">'+
+    '<input class="ans-input" id="e17-'+i+'-r3" placeholder="x₃" style="width:75px"></div></div>'
+  ).join('');
+}
+function checkEj17(){
+  let r=[];
+  ej17Data.forEach((it,i)=>{
+    const inputs=[$('#e17-'+i+'-r1'),$('#e17-'+i+'-r2'),$('#e17-'+i+'-r3')];
+    r.push(evalSet(inputs, it.roots, 0.04));
+  });
+  finish(17, r, 'e17-msg');
+}
+
+/* =====================================================================
+   CARGA PEREZOSA (lazy build) + 1 SOLO LISTENER DELEGADO
+   ===================================================================== */
+const builders = {1:buildEj1,2:buildEj2,3:buildEj3,4:buildEj4,5:buildEj5,6:buildEj6,7:buildEj7,8:buildEj8,9:buildEj9,
+                   10:buildEj10,11:buildEj11,12:buildEj12,13:buildEj13,14:buildEj14,15:buildEj15,16:buildEj16,17:buildEj17};
+const built = new Set();
+function ensureBuilt(n){
+  if(built.has(n)) return;
+  built.add(n);
+  builders[n]();
+}
+const checkFns = {3:checkEj3,4:checkEj4,5:checkEj5,6:checkEj6,7:checkEj7,8:checkEj8,9:checkEj9,
+                   10:checkEj10,11:checkEj11,12:checkEj12,13:checkEj13,14:checkEj14,15:checkEj15,17:checkEj17};
+
+let ej1Selected = null;
+function handleDragCardClick(card){
+  if(card.classList.contains('placed-correct')||card.classList.contains('placed-wrong')) return;
+  $all('.drag-card.selected').forEach(c=>c.classList.remove('selected'));
+  card.classList.add('selected');
+  ej1Selected = card;
+}
+function handleDropZoneClick(zone){
+  if(!ej1Selected) return;
+  const ok = ej1Selected.dataset.ans === zone.dataset.zone;
+  ej1Selected.classList.remove('selected');
+  ej1Selected.classList.add(ok?'placed-correct':'placed-wrong');
+  zone.appendChild(ej1Selected);
+  ej1Selected = null;
+  const placed = $all('#ej1 .drag-card.placed-correct, #ej1 .drag-card.placed-wrong').length;
+  if(placed>=3){
+    markDone(1);
+    $('#ej1-hint').textContent = 'a) Es función: cada cantidad de kilos tiene un único precio. b) No es función: un mismo nombre puede corresponder a varias personas (no hay unicidad). c) Es función: cada persona nace en un único país.';
+  }
+}
+function handleChoiceClick(btn){
+  const group = btn.closest('.choice-group');
+  if(!group || group.dataset.locked==='1') return;
+  $all('.choice-btn',group).forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  group.dataset.selected = btn.dataset.val;
+  if(group.dataset.immediate==='1'){
+    evalChoice(group);
+    group.dataset.locked='1';
+    const section = group.closest('section.card');
+    if(section){
+      const idx = section.dataset.idx;
+      const groups = $all('.choice-group[data-immediate="1"]', section);
+      const lockedCount = $all('.choice-group[data-immediate="1"][data-locked="1"]', section).length;
+      if(groups.length && lockedCount===groups.length) markDone(parseInt(idx,10));
+    }
+  }
+}
+
+/* único listener de click para TODA la página */
+$('#mainEl').addEventListener('click', function(e){
+  const vb = e.target.closest('.verify-btn');
+  if(vb){ const fn = checkFns[vb.dataset.check]; if(fn) fn(); return; }
+
+  const mb = e.target.closest('.match-btn');
+  if(mb){ handleMatchClick(mb); return; }
+
+  const dc = e.target.closest('.drag-card');
+  if(dc){ handleDragCardClick(dc); return; }
+
+  const dz = e.target.closest('.drop-zone');
+  if(dz){ handleDropZoneClick(dz); return; }
+
+  const cb = e.target.closest('.choice-btn');
+  if(cb){ handleChoiceClick(cb); return; }
+});
+
+/* observer: construye cada ejercicio recién cuando está por entrar en pantalla */
+const io = ('IntersectionObserver' in window) ? new IntersectionObserver((entries)=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      ensureBuilt(parseInt(en.target.dataset.idx,10));
+      io.unobserve(en.target);
+    }
+  });
+}, {rootMargin:'300px 0px', threshold:0}) : null;
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  buildToc();
+  // Ejercicios 1 y 2 son lo primero que se ve: se construyen ya mismo.
+  ensureBuilt(1); ensureBuilt(2);
+  if(io){
+    $all('section.card[data-idx]').forEach(sec=>{
+      if(sec.id!=='ej1' && sec.id!=='ej2') io.observe(sec);
+    });
+  } else {
+    // navegadores sin soporte: fallback a construcción inmediata de todo
+    for(let i=3;i<=17;i++) ensureBuilt(i);
+  }
+  updateProgress();
+});
+</script>
+</body>
+</html>
